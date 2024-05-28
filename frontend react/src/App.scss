@@ -1,0 +1,383 @@
+:root {
+    --primaryColor: #3498db;
+    --hoverColor: #2ecc71;
+    --paleGreen: hsl(96, 75%, 89%);
+    --whiteColor: hsl(0, 0%, 100%);
+    --blackColor: hsl(0, 0%, 18%);
+    --greyText: hsl(0, 0%, 75%);
+    --bgColor: hsl(113, 11%, 85%);
+    --inputColor: hsl(330, 12%, 97%);
+    --shadowColor: rgba(0, 0, 0, 0.1);
+    --biggestFontSize: 2.5rem;
+    --h1FontSize: 1.5rem;
+    --h2FontSize: 1rem;
+    --normalFontSize: .938rem;
+    --smallFontSize: .813rem;
+    --smallestFontSize: .75rem;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+html {
+    font-size: 90%;
+}
+
+body {
+    background-color: #ecf0f1; /* Color de fondo global */
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+img, video {
+    height: auto;
+    width: 100%;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+}
+
+.grid {
+    display: grid;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.icon {
+    font-size: var(--h2FontSize);
+    cursor: pointer;
+}
+
+.btn {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: .8rem 1rem;
+    color: var(--greyText);
+    background: var(--primaryColor);
+    box-shadow: 0 4px 8px var(--shadowColor);
+    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+
+    .icon {
+        margin-left: .5rem;
+    }
+
+    &:hover {
+        color: var(--whiteColor);
+        background: var(--hoverColor);
+        box-shadow: 0 6px 12px var(--shadowColor);
+    }
+}
+
+.message {
+    display: none;
+}
+
+.showMessage {
+    display: block;
+    color: var(--whiteColor);
+    padding: 0.1rem 1rem;
+    margin-left: 10%;
+    margin-right: 10%;
+    background: rgb(255, 0, 0);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.loginPage, .registerPage {
+    height: 100vh;
+    width: 100%;
+    margin: auto;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 7px 50px rgb(214, 223, 213);
+
+    .customText {
+        color: white;
+    }
+
+    .container {
+        height: 75vh;
+        width: 60%;
+        margin: auto;
+        justify-content: space-between;
+        border-radius: 10px;
+        background: hsl(0, 0%, 82%);
+        box-shadow: 0 4px 8px var(--shadowColor);
+        padding: 20px;
+
+        .videoDiv {
+            position: relative;
+            display: flex;
+            flex-basis: 50%;
+            width: 70%;
+            height: 100%;
+            padding: 0 1.5rem;
+            text-align: center;
+            justify-content: center;
+            flex-direction: column;
+            margin: auto;
+            border-radius: 10px;
+            overflow: hidden;
+
+            video, .footerDiv {
+                position: absolute;
+            }
+
+            video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                top: 0;
+                right: 0;
+                left: 0;
+                bottom: 0;
+            }
+
+            .textDiv {
+                position: absolute;
+                bottom: 70%;
+
+                .title {
+                    color: var(--whiteColor);
+                    font-size: 35px;
+                    font-weight: 800;
+                }
+            }
+
+            .footerDiv {
+                bottom: -212px;
+                padding: 0 1rem;
+                height: 60px;
+                background: rgba(255, 255, 255, 0.248);
+                left: 0;
+                right: 0;
+                justify-content: space-between;
+                backdrop-filter: blur(1px);
+                position: relative;
+                border-radius: 10px;
+
+                .text {
+                    color: #1f1e1f;
+                }
+
+                .btn {
+                    background: var(--blackColor);
+                    color: var(--whiteColor);
+                    padding: .8rem 1.5rem;
+                    border-radius: 10px;
+                    font-weight: 400;
+                    transition: .3s ease;
+
+                    &:hover {
+                        background: var(--whiteColor);
+                        color: var(--blackColor);
+                    }
+                }
+            }
+        }
+
+        .formDiv {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transform: translateY(-1rem);
+            padding: 1rem;
+
+            .headerDiv {
+                text-align: center;
+                padding: 1.5rem 0;
+
+                img {
+                    width: 100px; /* Incrementar el tamaño del logo */
+                    padding-bottom: 1rem; /* Incrementar el padding para separar los elementos */
+                }
+
+                h3 {
+                    font-size: 1.5rem;
+                    color: var(--blackColor);
+                    font-weight: 800;
+                }
+            }
+
+            .form {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem; /* Aumentar el espacio entre los elementos del formulario */
+
+                .inputDiv {
+                    margin-bottom: 0.01rem; /* Reduce el margen inferior entre los inputDiv */
+                    .icon {
+                        color: var(--greyText);
+                    }
+
+                    input {
+                        background: none;
+                        outline: none;
+                        border: none;
+                        width: 100%;
+                    }
+
+                    label {
+                        color: var(--blackColor);
+                        font-weight: 545;
+                        font-size: 14px;
+                        padding: 0.1rem 0; /* Reducir el padding inferior del label */
+                        display: block;
+                    }
+
+                    .input {
+                        display: flex;
+                        gap: .5rem;
+                        padding: .5rem; /* Reducir el padding de los inputs */
+                        background: var(--inputColor);
+                        border-radius: 10px;
+                        box-shadow: 0 2px 4px var(--shadowColor);
+                    }
+
+                    .togglePassword {
+                        background: none;
+                        color: var(--greyText);
+                        border: none;
+                        cursor: pointer;
+                        position: relative;
+                        left: 0%;
+                        top: 0%;
+                        transform: translateY(15%);
+                    }
+                }
+
+                .btn {
+                    background: var(--blackColor);
+                    border-radius: 10px;
+                    color: var(--whiteColor);
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 16px;
+                    width: auto;
+                    gap: .5rem;
+                    transition: .3s ease;
+                    padding:  0.6rem 4rem;
+
+                    .icon {
+                        font-size: 25px;
+                        transition: .3s ease;
+                    }
+
+                    &:hover {
+                        background: var(--whiteColor);
+                        color: var(--blackColor);
+
+                        .icon {
+                            color: var(--blackColor);
+                            transform: translateX(5px);
+                        }
+                    }
+                }
+
+                .forgotPassword {
+                    font-size: 13px;
+                    color: var(--blackColor);
+                    opacity: .7;
+                    text-align: center;
+
+                    a {
+                        text-decoration: underline;
+                        cursor: pointer;
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.dashboard {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: auto;
+
+    .dashboardContainer {
+        height: 95vh;
+        width: 95%;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 10px rgb(194, 194, 194);
+    }
+}
+
+@media (max-width: 1200px) {
+    .loginPage, .registerPage {
+        .container {
+            width: 80%;
+        }
+    }
+}
+
+@media (max-width: 992px) {
+    .loginPage, .registerPage {
+        .container {
+            flex-direction: column;
+            height: auto;
+
+            .videoDiv, .formDiv {
+                width: 100%;
+                height: auto;
+            }
+        }
+    }
+
+    .textDiv .title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .loginPage, .registerPage {
+        .container {
+            width: 90%;
+        }
+    }
+}
+
+@media (max-width: 576px) {
+    .loginPage, .registerPage {
+        .container {
+            width: 100%;
+
+            .formDiv {
+                padding: 1rem;
+
+                .headerDiv h3 {
+                    font-size: 1.25rem;
+                }
+
+                .form .inputDiv label {
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+
+    .textDiv .title {
+        font-size: 1.25rem;
+    }
+}
