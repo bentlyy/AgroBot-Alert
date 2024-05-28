@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const session = require('express-session');
@@ -6,14 +5,14 @@ const bodyParser = require('body-parser');
 const sensoresRoutes = require('./routes/sensoresRoutes');
 const UnidadesController = require('./controllers/unidadesController');
 const SensoresController = require('./controllers/sensoresController');
+const recuperacionContraseñaRoutes = require('./routes/recuperacionContraseñaRoutes');
 const authRoutes = require('./routes/authRoutes');
 const cors = require('cors');
 
-const app = express();
+const app = express(); // Inicializa Express
+
 app.use(cors());
-
 app.set('port', process.env.PORT || 3000);
-
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -24,11 +23,16 @@ app.use(session({
   saveUninitialized: true
 }));
 
+// Define tus rutas
 app.use('/api/sensores', sensoresRoutes);
+app.use('/api/auth', recuperacionContraseñaRoutes);
+app.use('/api/auth', authRoutes);
 
+// Crea instancias de tus controladores
 const unidadesController = new UnidadesController();
 const sensoresController = new SensoresController();
 
+// Define tus funciones asincrónicas para obtener y guardar unidades y sensores
 async function obtenerYGuardarUnidades() {
   try {
     const unidades = await unidadesController.obtenerTodasLasUnidades();
@@ -38,7 +42,6 @@ async function obtenerYGuardarUnidades() {
     console.error('Error:', error);
   }
 }
-obtenerYGuardarUnidades();
 
 async function obtenerYGuardarSensores() {
   try {
@@ -49,10 +52,15 @@ async function obtenerYGuardarSensores() {
     console.error('Error:', error);
   }
 }
+
+// Ejecuta tus funciones asincrónicas
+obtenerYGuardarUnidades();
 obtenerYGuardarSensores();
 
-app.use('/api/auth', authRoutes);
-
+// Inicia el servidor
 app.listen(app.get('port'), () => {   
   console.log(`Servidor escuchando en el puerto ${app.get('port')}`);
 });
+
+// Exporta app para ser utilizado en otros archivos si es necesario
+module.exports = app;

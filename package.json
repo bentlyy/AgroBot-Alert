@@ -12,6 +12,8 @@
     },
     "dependencies": {
         "axios": "^1.6.8",
-        "fs": "^0.0.1-security"
+        "fs": "^0.0.1-security",
+        "nodemailer": "^6.9.13",
+        "nodemailer-sendgrid-transport": "^0.2.0"
     }
 }
