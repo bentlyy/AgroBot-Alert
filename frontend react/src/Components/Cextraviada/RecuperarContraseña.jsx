@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../Cextraviada/RecuperarContraseña'; // Ajusta la ruta si es necesario
+ // Ajusta la ruta si es necesario
 import '../../App.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
@@ -60,7 +60,7 @@ const RecuperarContraseña = () => {
                         </button>
 
                         <span className='backToLogin'>
-                            <Link to={'/login'}>Volver al inicio de sesión</Link>
+                            <Link to={'/'}>Volver al inicio de sesión</Link>
                         </span>
                     </form>
                 </div>

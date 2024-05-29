@@ -1,4 +1,4 @@
-/*const Criterios = require('../models/criteriosModel');
+const Criterios = require('../models/criteriosModel');
 
 const criteriosController = {};
 
@@ -13,4 +13,4 @@ criteriosController.getAll = (req, res) => {
   });
 };
 
-module.exports = criteriosController;*/
+module.exports = criteriosController;
