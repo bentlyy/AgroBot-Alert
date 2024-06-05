@@ -1,19 +1,18 @@
 const nodemailer = require('nodemailer');
-const sgTransport = require('nodemailer-sendgrid-transport');
 require('dotenv').config();
 
-const options = {
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
     auth: {
-        api_key: process.env.SENDGRID_API_KEY
-    }
-};
-
-const transporter = nodemailer.createTransport(sgTransport(options));
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
 
 const enviarCorreoRecuperacion = async (email, token) => {
     const mailOptions = {
         to: email,
-        from: 'agrobotalert@gmail.com',
+        from: process.env.EMAIL_USER,
         subject: 'Recuperación de Contraseña',
         text: `Recibiste este correo porque tú (o alguien más) solicitó el restablecimiento de la contraseña para tu cuenta.\n\n
         Haz clic en el siguiente enlace, o pégalo en tu navegador para completar el proceso:\n\n

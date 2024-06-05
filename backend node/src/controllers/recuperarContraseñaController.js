@@ -4,9 +4,9 @@ const crypto = require('crypto');
 
 exports.solicitarRecuperacionContraseña = async (req, res) => {
     const { email } = req.body;
-    
+
     try {
-        const usuario = await Usuario.findOne({ email });
+        const usuario = await Usuario.findByEmail(email);
         if (!usuario) {
             return res.status(404).json({ mensaje: 'Usuario no encontrado' });
         }
@@ -29,8 +29,8 @@ exports.restablecerContraseña = async (req, res) => {
     const { token, nuevaContraseña } = req.body;
 
     try {
-        const usuario = await Usuario.findOne({ 
-            resetPasswordToken: token, 
+        const usuario = await Usuario.findOne({
+            resetPasswordToken: token,
             resetPasswordExpires: { $gt: Date.now() }
         });
 
@@ -38,7 +38,7 @@ exports.restablecerContraseña = async (req, res) => {
             return res.status(400).json({ mensaje: 'El token de recuperación de contraseña es inválido o ha expirado' });
         }
 
-        usuario.password = nuevaContraseña;
+        usuario.password = await usuario.hashPassword(nuevaContraseña);
         usuario.resetPasswordToken = undefined;
         usuario.resetPasswordExpires = undefined;
 
