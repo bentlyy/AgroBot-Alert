@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
- // Ajusta la ruta si es necesario
 import '../../App.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
-
 
 import logo from '../../Assets/logo.png';
 
@@ -16,11 +14,11 @@ const RecuperarContraseña = () => {
     const enviarSolicitudRecuperacion = async (event) => {
         event.preventDefault();
         try {
-            const response = await Axios.post('http://localhost:3000/api/auth/recuperar', {
+            const response = await Axios.post('http://localhost:3000/api/auth/solicitar-recuperacion', {
                 email
             });
-            if (response.data.message) {
-                setSuccessMessage(response.data.message);
+            if (response.data.mensaje) {
+                setSuccessMessage(response.data.mensaje);
                 setErrorMessage('');
             } else {
                 setErrorMessage('Hubo un error enviando la solicitud');

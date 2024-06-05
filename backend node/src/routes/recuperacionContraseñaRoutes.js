@@ -1,3 +1,4 @@
+//recuperarContraseñaRoutes.js
 const express = require('express');
 const router = express.Router();
 const { solicitarRecuperacionContraseña, restablecerContraseña } = require('../controllers/recuperarContraseñaController');

@@ -1,0 +1,89 @@
+:root{
+    --primaryColor: #3498db;
+    --hoverColor: #2ecc71;
+    --paleGreen: hsl(96, 75%, 89%);
+    --whiteColor: hsl(0, 0%, 100%);
+    --blackColor: hsl(0, 0%, 18%);
+    --greyText: hsl(0, 0%, 75%);
+    --bgColor: hsl(113, 11%, 85%);
+    --inputColor: hsl(330, 12%, 97%);
+    --shadowColor: rgba(0, 0, 0, 0.1);
+   
+    --biggestFontSize: 2.5rem;
+    --h1FontSize: 1.5rem;
+    --h2FontSize: 1rem;
+    --h3FontSize: 2rem;
+    --normalFontSize: .938rem;
+    --smallFontSize: .813rem;
+    --smallestFontSize: .75rem;
+    --itemCardColor: hsl(120, 5%, 88%);
+    --itemCardHoverr: hsl(320, 27%, 88%);
+}
+
+.activitySection{
+    flex-basis: 50%;
+
+    .heading{
+        width: 100%;
+        justify-content: space-between;
+
+        h1{
+            font-size: var(--h2FontSize);
+            color: var(--blackColor);
+            font-weight: 700;
+        }
+
+        .btn{
+            border: 1px solid transparent;
+        }
+
+        .btn:hover{
+            border: 1px solid var(--primaryColor);
+
+        }
+    }
+
+    .secContainer{
+        margin-top: 1rem;
+
+        .singleCustomer{
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        img{
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px var(--itemCardColor);
+            margin-right: 1rem;
+        }
+
+        .customDetails{
+            flex: 1;
+
+            .name{
+                font-size: var(--h3FontSize);
+                font-weight: 600;
+                color: var(--blackColor);
+                display: block;
+            }
+
+            small{
+                font-weight: 500;
+                color:var(--greyText);}
+                font-size: var(--smallFontSize);
+            }
+        }
+
+        .duration{
+            color: var(--greyText);
+            font-weight: 500;
+            font-size: var(--smallestFontSize);
+        }
+    }
+
+@media screen and (max-width: 918px) {
+    
+}
