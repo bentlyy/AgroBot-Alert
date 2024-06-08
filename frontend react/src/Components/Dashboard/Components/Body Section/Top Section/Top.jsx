@@ -1,24 +1,31 @@
-import React from "react";
-import './top.css'
+import React, { useState, useEffect } from "react";
+import './top.css';
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import { BiSearchAlt } from "react-icons/bi";
 import { TbMessageCircle } from "react-icons/tb";
-import { MdOutlineNotificationsNone } from "react-icons/md";
+import { BsArrowRightShort, BsQuestionCircle } from "react-icons/bs";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import 'leaflet/dist/leaflet.css';
+import axios from 'axios';
 
-import img from '../../../Assets/user(3).png'
-import video from '../../../Assets/video.mp4'
-import img2 from '../../../Assets/user(2).png'
-
-import { BsArrowRightShort } from "react-icons/bs";
-
+import img from '../../../Assets/user(3).png';
 
 const Top = () => {
+    const [units, setUnits] = useState([]);
+
+    useEffect(() => {
+        // Fetch unit data
+        axios.get('http://localhost:3000/api/map')  // Adjust URL to your API endpoint
+            .then(response => setUnits(response.data))
+            .catch(error => console.error('Error fetching unit data:', error));
+    }, []);
+
     return (
         <div className="topSection">
             <div className="headerSection flex">
                 <div className="title">
                     <h1>Welcome to Pranti.</h1>
-                    <p> Helllo isratech, welcome back!</p>
+                    <p>Hello isratech, welcome back!</p>
                 </div>
 
                 <div className="searchBar flex">
@@ -30,77 +37,37 @@ const Top = () => {
                     <TbMessageCircle className="icon"/>
                     <MdOutlineNotificationsNone className="icon"/>
                     <div className="adminImage">
-                        <img src="{img}" alt="Admin Image" />    
-                    </div>                    
+                        <img src={img} alt="Admin Image" />
+                    </div>
                 </div>
-
             </div>
 
             <div className="cardSection flex">
                 <div className="rightCard flex">
-                    <h1>Create and sell extraordinary products</h1>
-                    <p>the worlds fast growinfsa indasdasshahdsa hsadhas hsdah sjdak</p>
+                    <h1>Track and Monitor Your Units</h1>
+                    <p>View real-time data and locations of all your units on the map.</p>
 
-                    <div className="buttons flex">
-                        <button className="btn">Explore more</button>
-                        <button className="btn transparent">Top sellers</button>
+                    <div className="mapContainer">
+                        <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false} style={{ height: "400px", width: "100%" }}>
+                            <TileLayer
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                            />
+                            {units.map(unit => (
+                                <Marker key={unit.id_unidad} position={[unit.latitude, unit.longitude]}>
+                                    <Popup>
+                                        <h3>{unit.nombre}</h3>
+                                        <p>Sensor Data: {unit.sensorData}</p>
+                                        <p>Other Info: {unit.otherInfo}</p>
+                                    </Popup>
+                                </Marker>
+                            ))}
+                        </MapContainer>
                     </div>
-
-                    <div className="videoDiv">
-                        <video src={video} autoPlay loop muted ></video>
-                    </div>
-
                 </div>
-
-                <div className="leftCard flex">
-                    <div className="main flex">
-                        <div className="textDiv">
-                            <h1>My stat</h1>
-
-                            <div className="flex">
-                                <span>
-                                    Today <br/> <small>4 Orders</small>
-                                </span>
-                            </div>
-                            
-                            <div className="flex">
-                                <span>
-                                    This Month <br/> <small>175 Orders</small>
-                                </span>
-                            </div>
-
-                            <span className="flex link">
-                                Go to my orders <BsArrowRightShort
-                                className="icon"/>
-                            </span>
-
-                        </div>
-
-                        <div className="imgDiv">
-                            <img src={img2} alt="Image Name" />
-                        </div>
-
-                        <div className="sideBarCard">
-                            <BsQuestionCircle className="icon"/>
-                            <div className="cardContent">
-                              <div className="circle1"></div>
-                              <div className="circle2"></div>
-
-                              <h3>help center</h3>
-
-                              <p>having trouble in planti, please contact us from for more questuions..</p>
-                
-                              <button className="btn">go to help center</button>
-                            </div>
-
-                        </div>
-                </div>
-
             </div>
         </div>
-
-    </div>
-    )
+    );
 }
 
-export default Top
+export default Top;

@@ -1,3 +1,4 @@
+//Sidebar.jsx
 import React from "react";
 import './sidebar.css'
 
@@ -10,7 +11,7 @@ const Sidebar = () => {
 
         <div className='sideBAr grid'>
             <div className="logoDiv flex">
-                <img src="" alt="Image Name" />
+                <img src={logo} alt="Image Name" />
                 <h2>Planti.</h2>
             </div>
 

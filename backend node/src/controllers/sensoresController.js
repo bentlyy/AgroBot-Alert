@@ -1,30 +1,18 @@
+// sensoresController.js
+const { searchUnits, loadMessages } = require('../utils/wialonApiUtils');
 const SensoresModel = require('../models/sensorModel');
-const pool = require('../utils/dbConnection');
 
 class SensoresController {
   constructor() {
-    this.sensorModel = new SensoresModel(pool);
+    this.sensorModel = new SensoresModel();
   }
 
-  async obtenerTodosLosSensores() {
+  async guardarSensoresDeAPI() {
     try {
-      return await this.sensorModel.obtenerSensores();
-    } catch (error) {
-      console.error('Error obteniendo sensores:', error);
-      throw new Error('Error obteniendo sensores');
-    }
-  }
-
-  async guardarSensoresDeAPI(datosSensor) {
-    try {
-      for (const sensor of datosSensor) {
-        // Verifica si el sensor ya está en la base de datos
-        const sensoresExistentes = await this.sensorModel.obtenerSensores();
-        if (sensoresExistentes.some(u => u.nombre === sensor.nombre)) {
-          console.log(`Sensor con nombre ${sensor.nombre} ya está guardado.`);
-        } else {
-          await this.sensorModel.guardarSensor(sensor);
-        }
+      const unidades = await searchUnits(); // Obtener unidades de la API de Wialon
+      for (const unidad of unidades) {
+        const mensajes = await loadMessages(unidad.id); // Obtener mensajes de la unidad de la API de Wialon
+        await this.sensorModel.guardarSensores(mensajes); // Guardar los mensajes como sensores en la base de datos
       }
       console.log('¡Sensores guardados exitosamente!');
     } catch (error) {

@@ -1,30 +1,35 @@
-// unidadesModel.js
 const pool = require('../utils/dbConnection');
 
-class SensoresModel {
-  constructor(pool) {  
+class SensorModel {
+  constructor() {
     this.pool = pool;
   }
 
-  async guardarSensor(sensor) {
-    const { id_unidad, temperatura_s1, temperatura_s2, humedad_s1, humedad_s2, electroconductividad_s1, electroconductividad_s2, gps_energia, energia_externa } = sensor;
-
+  async guardarSensores(mensajes) {
     try {
-      // Insertar los valores de los sensores en la base de datos
-      const query = 'INSERT INTO sensores (id_unidad, temperatura_s1, temperatura_s2, humedad_s1, humedad_s2, electroconductividad_s1, electroconductividad_s2, gps_energia, energia_externa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-      await new Promise((resolve, reject) => {
-        this.pool.query(query, [id_unidad, temperatura_s1, temperatura_s2, humedad_s1, humedad_s2, electroconductividad_s1, electroconductividad_s2, gps_energia, energia_externa], (error, results, fields) => {
-          if (error) {
-            console.error('Error al guardar el sensor:', error);
-            return reject(new Error('Error al guardar el sensor'));
-          }
-          resolve(results);
+      for (const mensaje of mensajes) {
+        const { timestamp, unidadId, parametros } = mensaje;
+        // Insertar los datos del sensor en la base de datos
+        const query = `
+          INSERT INTO sensores (timestamp, unidad_id, temperatura1, temperatura2, humedad1, humedad2, electroconductividad1, electroconductividad2, energia_gps, energia_externa)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+        await new Promise((resolve, reject) => {
+          this.pool.query(query, [timestamp, unidadId, parametros.temperatura1, parametros.temperatura2, parametros.humedad1, parametros.humedad2, parametros.electroconductividad1, parametros.electroconductividad2, parametros.energiaGps, parametros.energiaExterna], (error, results) => {
+            if (error) {
+              console.error('Error al guardar el sensor:', error);
+              return reject(new Error('Error al guardar el sensor'));
+            }
+            resolve(results);
+          });
         });
-      });
+      }
+      console.log('¡Sensores guardados exitosamente!');
     } catch (error) {
-      throw error;
+      console.error('Error guardando sensores:', error);
+      throw new Error('Error guardando sensores');
     }
   }
 }
 
-module.exports = SensoresModel;
+module.exports = SensorModel;

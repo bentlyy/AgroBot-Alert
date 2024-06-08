@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Login.css';
 import '../../App.scss';
 import { Link, useNavigate } from 'react-router-dom';
@@ -18,15 +18,21 @@ const Login = () => {
     const [successMessage, setSuccessMessage] = useState('');
     const navigateTo = useNavigate();
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            navigateTo('/dashboard');
+        }
+    }, []);
+
     const loginUsuario = async (event) => {
         event.preventDefault();
         try {
-            console.log('Iniciando solicitud de inicio de sesión');
             const response = await Axios.post('http://localhost:3000/api/auth/login', {
                 LoginNombre: loginNombre,
                 LoginContraseña: loginContraseña
             });
-            console.log('Respuesta recibida:', response.data);
+
             if (response.data.message) {
                 setErrorMessage(response.data.message);
                 setSuccessMessage('');
@@ -36,7 +42,7 @@ const Login = () => {
                 setErrorMessage('');
                 setTimeout(() => {
                     navigateTo('/dashboard');
-                }, 500); // Esperar 2 segundos antes de redirigir
+                }, 500);
             }
         } catch (error) {
             setErrorMessage('Hubo un error iniciando sesión');
