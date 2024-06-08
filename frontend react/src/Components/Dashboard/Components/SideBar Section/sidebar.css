@@ -39,7 +39,7 @@
   cursor: pointer;
 }
 .sidebar .logoDiv img {
-  max-width: 20px;
+  max-width: 1px;
   margin-right: 0.5rem;
   background: var(--inputColor);
   border-radius: 2px;

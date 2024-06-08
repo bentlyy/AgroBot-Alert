@@ -1,5 +1,6 @@
 const axios = require('axios');
 const fs = require('fs');
+require('dotenv').config();
 
 // Crear el archivo de registro
 const logStream = fs.createWriteStream('output.log', { flags: 'a' });
@@ -79,34 +80,20 @@ async function loadMessages(eid, unitId) {
         const response = await makeHttpRequest('https://hst-api.wialon.us/wialon/ajax.html', params);
         logToFile("Mensajes cargados para la unidad " + unitId);
         const formattedMessages = response.messages.map(message => {
-            const formattedMessage = {
-                Timestamp: message.t,
-                Flags: message.f,
-                Type: message.tp,
-                Position: {
-                    Latitude: message.pos.y,
-                    Longitude: message.pos.x,
-                    Altitude: message.pos.z,
-                    Speed: message.pos.s,
-                    Course: message.pos.c,
-                    Satellites: message.pos.sc
-                },
-                IO: message.i,
-                Output: message.o,
-                LastChanged: message.lc,
-                Route: message.rt,
-                Parameters: {
-                    Temperature_S1: message.p.user_2u_1,
-                    Temperature_S2: message.p.user_2u_2,
-                    Humidity_S1: message.p.user_2u_3,
-                    Humidity_S2: message.p.user_2u_4,
-                    Electroconductivity_S1: message.p.user_2u_5,
-                    Electroconductivity_S2: message.p.user_2u_6,
-                    GPS_Energy: message.p.pwr_int,
-                    External_Energy: message.p.pwr_ext
+            return {
+                timestamp: message.t,
+                unidadId: unitId,
+                parametros: {
+                    temperatura1: message.p.user_2u_1,
+                    temperatura2: message.p.user_2u_2,
+                    humedad1: message.p.user_2u_3,
+                    humedad2: message.p.user_2u_4,
+                    electroconductividad1: message.p.user_2u_5,
+                    electroconductividad2: message.p.user_2u_6,
+                    energiaGps: message.p.pwr_int,
+                    energiaExterna: message.p.pwr_ext
                 }
             };
-            return formattedMessage;
         });
         logMessages(formattedMessages);
         return formattedMessages;
