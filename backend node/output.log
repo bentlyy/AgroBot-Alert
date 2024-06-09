@@ -2,3 +2,113 @@ Mensajes cargados para la unidad undefined
 Error al cargar mensajes:TypeError: Cannot read properties of undefined (reading 'map')
 Mensajes cargados para la unidad undefined
 Error al cargar mensajes:TypeError: Cannot read properties of undefined (reading 'map')
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Search Units Response: {
+  "error": 1
+}
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Search Units Response: {
+  "error": 1
+}
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Search Units Response: {
+  "error": 1
+}
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Search Units Response: {
+  "error": 1
+}
+Error al obtener los sensores:Error: Error al buscar unidades: código de error 1
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Search Units Response: {
+  "error": 1
+}
+Error al obtener los sensores:Error: Error al buscar unidades: código de error 1
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Search Units Response: {
+  "error": 1
+}
+Error al obtener los sensores:Error: Error al buscar unidades: código de error 1
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Search Units Response: {
+  "error": 1
+}
+Error al obtener los sensores:Error: Error al buscar unidades: código de error 1
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Error al buscar unidades:Error: Error al buscar unidades: código de error 1
+Error al obtener los sensores:Error: Error al buscar unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Error al buscar unidades:Error: Error al buscar unidades: código de error 1
+Error al obtener los sensores:Error: Error al buscar unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Error al buscar unidades:Error: Error al buscar unidades: código de error 1
+Error al obtener los sensores:Error: Error al buscar unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Error al buscar unidades:Error: Error al buscar unidades: código de error 1
+Error al obtener los sensores:Error: Error al buscar unidades

@@ -19,7 +19,7 @@ const Activity = () => {
   return (
     <div className="activitySection">
       <div className="alerts">
-        <h2>Recent Alerts</h2>
+        <h2>Alertas Recientes</h2>
         <ul>
           {alerts.map(alert => (
             <li key={alert.id_alerta}>
@@ -30,7 +30,7 @@ const Activity = () => {
         </ul>
       </div>
       <div className="notifications">
-        <h2>Recent Notifications</h2>
+        <h2>Notificaciones Recientes</h2>
         <ul>
           {notifications.map(notification => (
             <li key={notification.id_notificacion}>

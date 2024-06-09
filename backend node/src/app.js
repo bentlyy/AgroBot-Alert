@@ -1,17 +1,18 @@
+require('dotenv').config(); // Asegúrate de que esto esté al inicio del archivo
+
 const express = require('express');
 const morgan = require('morgan');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const unidadesRoutes = require('./routes/unidadesRoutes');
 const sensoresRoutes = require('./routes/sensoresRoutes');
-const UnidadesController = require('./controllers/unidadesController');
-const SensoresController = require('./controllers/sensoresController');
 const recuperacionContraseñaRoutes = require('./routes/recuperacionContraseñaRoutes');
 const authRoutes = require('./routes/authRoutes');
 const mapRoutes = require('./routes/mapRoutes');
 const alertasRoutes = require('./routes/alertasRoutes');
-
-const cors = require('cors');
+const UnidadesController = require('./controllers/unidadesController');
+const SensoresController = require('./controllers/sensoresController');
 
 const app = express(); // Inicializa Express
 
@@ -34,6 +35,7 @@ app.use('/api/auth', recuperacionContraseñaRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/map', mapRoutes);
 app.use('/api/alertas', alertasRoutes);
+
 // Crea instancias de tus controladores
 const unidadesController = new UnidadesController();
 const sensoresController = new SensoresController();
@@ -61,8 +63,7 @@ async function obtenerYGuardarSensores() {
 
 // Ejecuta tus funciones asincrónicas
 obtenerYGuardarUnidades();
-obtenerYGuardarSensores();
-
+//obtenerYGuardarSensores();
 
 // Inicia el servidor
 app.listen(app.get('port'), () => {   
