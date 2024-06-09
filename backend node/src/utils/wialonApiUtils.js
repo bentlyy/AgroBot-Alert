@@ -1,6 +1,5 @@
 const axios = require('axios');
 const fs = require('fs');
-require('dotenv').config();
 
 // Crear el archivo de registro
 const logStream = fs.createWriteStream('output.log', { flags: 'a' });
@@ -20,6 +19,7 @@ async function makeHttpRequest(url, params) {
     params.sid = process.env.API_TOKEN; // Agregar el token a los parámetros
     try {
         const response = await axios.get(url, { params });
+        logToFile(`HTTP Response: ${JSON.stringify(response.data, null, 2)}`);  // Log response
         return response.data;
     } catch (error) {
         logToFile('Error:' + error);
@@ -50,7 +50,14 @@ async function searchUnits(eid) {
         }),
         sid: eid
     };
-    return makeHttpRequest('https://hst-api.wialon.us/wialon/ajax.html', params);
+    const response = await makeHttpRequest('https://hst-api.wialon.us/wialon/ajax.html', params);
+    logToFile(`Search Units Response: ${JSON.stringify(response, null, 2)}`);  // Log response
+
+    if (response.error) {
+        throw new Error(`Error al buscar unidades: código de error ${response.error}`);
+    }
+
+    return response;
 }
 
 // Función para cargar mensajes
@@ -58,50 +65,75 @@ async function loadMessages(eid, unitId) {
     const today = new Date();
     today.setHours(23, 59, 59, 999);
     const todayUnixTimestamp = Math.floor(today.getTime() / 1000);
-
+  
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     yesterday.setHours(0, 0, 0, 0);
     const yesterdayUnixTimestamp = Math.floor(yesterday.getTime() / 1000);
-
+  
     const params = {
-        svc: 'messages/load_interval',
-        params: JSON.stringify({
-            itemId: unitId,
-            timeFrom: yesterdayUnixTimestamp,
-            timeTo: todayUnixTimestamp,
-            flags: 1,
-            flagsMask: 65281,
-            loadCount: 6
-        }),
-        sid: eid
+      svc: 'messages/load_interval',
+      params: JSON.stringify({
+        itemId: unitId,
+        timeFrom: yesterdayUnixTimestamp,
+        timeTo: todayUnixTimestamp,
+        flags: 1,
+        flagsMask: 65281,
+        loadCount: 6
+      }),
+      sid: eid
     };
     try {
-        const response = await makeHttpRequest('https://hst-api.wialon.us/wialon/ajax.html', params);
-        logToFile("Mensajes cargados para la unidad " + unitId);
-        const formattedMessages = response.messages.map(message => {
-            return {
-                timestamp: message.t,
-                unidadId: unitId,
-                parametros: {
-                    temperatura1: message.p.user_2u_1,
-                    temperatura2: message.p.user_2u_2,
-                    humedad1: message.p.user_2u_3,
-                    humedad2: message.p.user_2u_4,
-                    electroconductividad1: message.p.user_2u_5,
-                    electroconductividad2: message.p.user_2u_6,
-                    energiaGps: message.p.pwr_int,
-                    energiaExterna: message.p.pwr_ext
-                }
-            };
-        });
-        logMessages(formattedMessages);
-        return formattedMessages;
+      const response = await makeHttpRequest('https://hst-api.wialon.us/wialon/ajax.html', params);
+      logToFile("Mensajes cargados para la unidad " + unitId);
+      const formattedMessages = response.messages.map(message => {
+        const formattedMessage = {
+          id_sensor: message.t, // Asumiendo que `message.t` es único y puede ser usado como id_sensor
+          nombre: `Sensor de unidad ${unitId}`, // Puedes ajustar esto según el nombre real del sensor si está disponible
+          id_unidad: unitId,
+          Timestamp: message.t,
+          Flags: message.f,
+          Type: message.tp,
+          Position: {
+            Latitude: message.pos.y,
+            Longitude: message.pos.x,
+            Altitude: message.pos.z,
+            Speed: message.pos.s,
+            Course: message.pos.c,
+            Satellites: message.pos.sc
+          },
+          IO: message.i,
+          Output: message.o,
+          LastChanged: message.lc,
+          Route: message.rt,
+          Parameters: {
+            Temperature_S1: message.p.user_2u_1,
+            Temperature_S2: message.p.user_2u_2,
+            Humidity_S1: message.p.user_2u_3,
+            Humidity_S2: message.p.user_2u_4,
+            Electroconductivity_S1: message.p.user_2u_5,
+            Electroconductivity_S2: message.p.user_2u_6,
+            GPS_Energy: message.p.pwr_int,
+            External_Energy: message.p.pwr_ext
+          }
+        };
+        return formattedMessage;
+      });
+      logMessages(formattedMessages);
+      return formattedMessages;
     } catch (error) {
-        logToFile('Error al cargar mensajes:' + error);
-        throw new Error('Error al cargar mensajes');
+      logToFile('Error al cargar mensajes:' + error);
+      throw new Error('Error al cargar mensajes');
     }
-}
+  }
+  
+  module.exports = {
+    makeHttpRequest,
+    loadMessages,
+    getEidFromResponse,
+    logToFile
+  };
+  
 
 module.exports = {
     makeHttpRequest,

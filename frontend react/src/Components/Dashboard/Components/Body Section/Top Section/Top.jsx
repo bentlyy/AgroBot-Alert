@@ -3,19 +3,65 @@ import './top.css';
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import { BiSearchAlt } from "react-icons/bi";
 import { TbMessageCircle } from "react-icons/tb";
-import { BsArrowRightShort, BsQuestionCircle } from "react-icons/bs";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
 import img from '../../../Assets/user(3).png';
 
-const Top = () => {
+const Top = ({ nombreUsuario }) => {
     const [units, setUnits] = useState([]);
+    const [inactiveTime, setInactiveTime] = useState(0);
+    const navigate = useNavigate();
+
+    // Función para restablecer el tiempo de inactividad
+    const resetInactiveTime = () => {
+        setInactiveTime(0);
+    };
+
+    // Función para manejar la inactividad del usuario
+    const handleInactive = () => {
+        setInactiveTime(prevTime => prevTime + 1);
+    };
+
+    // Función para cerrar sesión
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        navigate('/');  // Redirigir a la página de inicio de sesión
+    };
+
+    // Efecto para iniciar el temporizador de inactividad
+    useEffect(() => {
+        const intervalId = setInterval(handleInactive, 1000);
+        return () => clearInterval(intervalId);
+    }, []);
+
+    // Efecto para comprobar si se ha alcanzado el tiempo de inactividad máximo
+    useEffect(() => {
+        const maxInactiveTime = 60 * 10; // 15 minutos de inactividad antes de cerrar sesión
+        if (inactiveTime >= maxInactiveTime) {
+            handleLogout(); // Cerrar sesión automáticamente
+        }
+    }, [inactiveTime]);
+
+    // Manejar el evento de actividad del usuario
+    const handleActivity = () => {
+        resetInactiveTime(); // Restablecer el tiempo de inactividad cuando hay actividad
+    };
+
+    // Adjuntar el detector de eventos de actividad del usuario
+    useEffect(() => {
+        document.addEventListener('mousemove', handleActivity);
+        document.addEventListener('keypress', handleActivity);
+        return () => {
+            document.removeEventListener('mousemove', handleActivity);
+            document.removeEventListener('keypress', handleActivity);
+        };
+    }, []);
 
     useEffect(() => {
-        // Fetch unit data
-        axios.get('http://localhost:3000/api/map')  // Adjust URL to your API endpoint
+        axios.get('http://localhost:3000/api/map')
             .then(response => setUnits(response.data))
             .catch(error => console.error('Error fetching unit data:', error));
     }, []);
@@ -24,12 +70,12 @@ const Top = () => {
         <div className="topSection">
             <div className="headerSection flex">
                 <div className="title">
-                    <h1>Welcome to Pranti.</h1>
-                    <p>Hello isratech, welcome back!</p>
+                    <h1>Agrobot Alert</h1>
+                    <p>Hola {nombreUsuario}, bienvenido de vuelta!</p>
                 </div>
 
                 <div className="searchBar flex">
-                    <input type="text" placeholder='Search Dashboard' />
+                    <input type="text" placeholder='Busqueda por unidad' />
                     <BiSearchAlt className="icon"/>
                 </div>
 
@@ -38,6 +84,7 @@ const Top = () => {
                     <MdOutlineNotificationsNone className="icon"/>
                     <div className="adminImage">
                         <img src={img} alt="Admin Image" />
+                        <button onClick={handleLogout} className="logoutButton">Cerrar Sesión</button>
                     </div>
                 </div>
             </div>

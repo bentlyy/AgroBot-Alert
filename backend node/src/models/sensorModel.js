@@ -1,33 +1,32 @@
 const pool = require('../utils/dbConnection');
 
 class SensorModel {
-  constructor() {
+  constructor(pool) {
     this.pool = pool;
   }
 
-  async guardarSensores(mensajes) {
+  async guardarSensor(sensor) {
+    const { id_sensor, nombre, id_unidad } = sensor;
+    if (!id_sensor || !nombre || !id_unidad) {
+      console.error('Datos del sensor incompletos:', sensor);
+      return Promise.reject(new Error('Datos del sensor incompletos'));
+    }
+
+    const query = 'INSERT INTO sensores (id_sensor, nombre, id_unidad) VALUES (?, ?, ?)';
+    const values = [id_sensor, nombre, id_unidad];
+
     try {
-      for (const mensaje of mensajes) {
-        const { timestamp, unidadId, parametros } = mensaje;
-        // Insertar los datos del sensor en la base de datos
-        const query = `
-          INSERT INTO sensores (timestamp, unidad_id, temperatura1, temperatura2, humedad1, humedad2, electroconductividad1, electroconductividad2, energia_gps, energia_externa)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `;
-        await new Promise((resolve, reject) => {
-          this.pool.query(query, [timestamp, unidadId, parametros.temperatura1, parametros.temperatura2, parametros.humedad1, parametros.humedad2, parametros.electroconductividad1, parametros.electroconductividad2, parametros.energiaGps, parametros.energiaExterna], (error, results) => {
-            if (error) {
-              console.error('Error al guardar el sensor:', error);
-              return reject(new Error('Error al guardar el sensor'));
-            }
-            resolve(results);
-          });
+      await new Promise((resolve, reject) => {
+        this.pool.query(query, values, (error, results) => {
+          if (error) {
+            console.error('Error al guardar el sensor:', error);
+            return reject(new Error('Error al guardar el sensor'));
+          }
+          resolve(results);
         });
-      }
-      console.log('¡Sensores guardados exitosamente!');
+      });
     } catch (error) {
-      console.error('Error guardando sensores:', error);
-      throw new Error('Error guardando sensores');
+      throw error;
     }
   }
 }

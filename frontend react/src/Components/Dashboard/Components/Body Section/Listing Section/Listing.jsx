@@ -13,7 +13,7 @@ const Listing = () => {
 
   return (
     <div className="listingSection">
-      <h2>Units Listing</h2>
+      <h2>Lista de Unidades</h2>
       <table>
         <thead>
           <tr>

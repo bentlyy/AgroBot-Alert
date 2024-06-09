@@ -1,4 +1,3 @@
-//Sidebar.jsx
 import React from "react";
 import './sidebar.css'
 
@@ -11,29 +10,19 @@ const Sidebar = () => {
 
         <div className='sideBAr grid'>
             <div className="logoDiv flex">
-                <img src={logo} alt="Image Name" />
-                <h2>Planti.</h2>
+                {/*<img src={logo} alt="Image Name" />*/}
             </div>
 
             <div className="menuDiv">
                 <h3 className="divTitle">
-                    QUICK MENU
+                    Menú
                 </h3>
                 <ul className="menuLists grid">
                     <li className="listItem">
                         <a href="#" className="menuLink flex">
                             <IoMdSpeedometer className="icon"/>
                             <span className="smallText">
-                                Dash board
-                            </span>
-                        </a>
-                    </li>
-
-                    <li className="listItem">
-                        <a href="" className="menuLink flex">
-                            <IoMdSpeedometer className="icon"/>
-                            <span className="smallText">
-                                My orders
+                                Dashboard
                             </span>
                         </a>
                     </li>
@@ -42,7 +31,7 @@ const Sidebar = () => {
                         <a href="#" className="menuLink flex">
                             <IoMdSpeedometer className="icon"/>
                             <span className="smallText">
-                                Explore
+                                Unidades
                             </span>
                         </a>
                     </li>
@@ -51,33 +40,7 @@ const Sidebar = () => {
                         <a href="#" className="menuLink flex">
                             <IoMdSpeedometer className="icon"/>
                             <span className="smallText">
-                                Products
-                            </span>
-                        </a>
-                    </li>
-
-                </ul>
-            </div>
-
-            <div className="settingsDiv">
-                <h3 className="divTitle">
-                    SETTINGS
-                </h3>
-                <ul className="menuLists grid">
-                    <li className="listItem">
-                        <a href="#" className="menuLink flex">
-                            <IoMdSpeedometer className="icon"/>
-                            <span className="smallText">
-                                Charts
-                            </span>
-                        </a>
-                    </li>
-
-                    <li className="listItem">
-                        <a href="" className="menuLink flex">
-                            <IoMdSpeedometer className="icon"/>
-                            <span className="smallText">
-                                Trends
+                                Usuarios
                             </span>
                         </a>
                     </li>
@@ -86,7 +49,7 @@ const Sidebar = () => {
                         <a href="#" className="menuLink flex">
                             <IoMdSpeedometer className="icon"/>
                             <span className="smallText">
-                                Explore
+                                Alertas
                             </span>
                         </a>
                     </li>
@@ -95,16 +58,16 @@ const Sidebar = () => {
                         <a href="#" className="menuLink flex">
                             <IoMdSpeedometer className="icon"/>
                             <span className="smallText">
-                                Contact
+                                Criterios
                             </span>
-                        </a>    
+                        </a>
                     </li>
 
                     <li className="listItem">
                         <a href="#" className="menuLink flex">
                             <IoMdSpeedometer className="icon"/>
                             <span className="smallText">
-                                Billing
+                                Notificaciones
                             </span>
                         </a>    
                     </li>
@@ -117,11 +80,11 @@ const Sidebar = () => {
                 <div></div>
                 <div></div>
 
-                <h3>help center</h3>
+                <h3>Centro de ayuda</h3>
 
-                <p>having trouble in planti, please contact us from for more questuions..</p>
+                <p>Tienes problemas? </p>
                 
-                <button className="btn">go to help center</button>
+                <button className="btn">contactanos</button>
             </div>
 
         </div>
@@ -129,4 +92,4 @@ const Sidebar = () => {
     )
 }
 
-export default Sidebar
+export default Sidebar;

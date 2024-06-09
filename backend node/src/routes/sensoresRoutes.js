@@ -1,24 +1,25 @@
 const express = require('express');
 const router = express.Router();
+const SensoresController = require('../controllers/sensoresController');
+const sensoresController = new SensoresController();
 
-module.exports = (sensoresController, conectividadAPI) => {
-  router.get('/', async (req, res, next) => {
+router.get('/', async (req, res) => {
     try {
-      const sensores = await sensoresController.obtenerTodasLasUnidades();
-      res.json(sensores);
+        const sensores = await sensoresController.obtenerTodosLosSensores();
+        res.json(sensores);
     } catch (error) {
-      next(error);
+        res.status(500).json({ error: 'Error al obtener los sensores' });
     }
-  });
+});
 
-  router.post('/', async (req, res, next) => {
+router.post('/guardar', async (req, res) => {
     try {
-      await sensoresController.guardarSensoresDeAPI(req.body);
-      res.send('¡Sensores guardados exitosamente!');
+        const sensores = req.body;
+        await sensoresController.guardarSensoresDeApi(sensores);
+        res.status(201).json({ message: 'Sensores guardados correctamente' });
     } catch (error) {
-      next(error);
+        res.status(500).json({ error: 'Error al guardar los sensores' });
     }
-  });
+});
 
-  return router;
-};
+module.exports = router;

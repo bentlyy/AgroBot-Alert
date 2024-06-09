@@ -23,7 +23,7 @@ const Login = () => {
         if (token) {
             navigateTo('/dashboard');
         }
-    }, []);
+    }, [navigateTo]);
 
     const loginUsuario = async (event) => {
         event.preventDefault();
@@ -38,6 +38,8 @@ const Login = () => {
                 setSuccessMessage('');
             } else {
                 localStorage.setItem('token', response.data.token);
+                localStorage.setItem('usuario', response.data.nombre);
+
                 setSuccessMessage('Inicio de sesión exitoso, redirigiendo al dashboard...');
                 setErrorMessage('');
                 setTimeout(() => {
