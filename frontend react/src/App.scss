@@ -316,6 +316,7 @@ img, video {
     margin: auto;
 
     .dashboardContainer {
+        display: flex;
         height: 95vh;
         width: 95%;
         border-radius: 10px;

@@ -112,3 +112,153 @@ HTTP Response: {
 }
 Error al buscar unidades:Error: Error al buscar unidades: código de error 1
 Error al obtener los sensores:Error: Error al buscar unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Error al buscar unidades:Error: Error al buscar unidades: código de error 1
+Error al obtener los sensores:Error: Error al buscar unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Error al buscar unidades:Error: Error al buscar unidades: código de error 1
+Error al obtener los sensores:Error: Error al buscar unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Error al buscar unidades:Error: Error al buscar unidades: código de error 1
+Error al obtener los sensores:Error: Error al buscar unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Error al buscar unidades:Error: Error al buscar unidades: código de error 1
+Error al obtener los sensores:Error: Error al buscar unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Error al buscar unidades:Error: Error al buscar unidades: código de error 1
+Error al obtener los sensores:Error: Error al buscar unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Error al buscar unidades: código de error 1
+Error al buscar unidades:Error al buscar unidades: código de error 1
+Error al obtener los sensores:Error: Error al buscar unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Error al buscar unidades: código de error 1
+Error al buscar unidades:Error al buscar unidades: código de error 1
+Error al obtener los sensores:Error: Error al buscar unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Error al buscar unidades: código de error 1
+Error al buscar unidades:Error al buscar unidades: código de error 1
+Error al obtener los sensores:Error: Error al buscar unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Error al buscar unidades: código de error 1
+Error al buscar unidades:Error al buscar unidades: código de error 1
+Error al obtener los sensores:Error: Error al buscar unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Error al buscar unidades: código de error 1
+Error al buscar unidades:Error al buscar unidades: código de error 1
+Error al obtener los sensores:Error: Error al buscar unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+Error al obtener los sensores:TypeError: this.obtenerUnidades is not a function
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+Error al obtener los sensores:TypeError: this.obtenerUnidades is not a function
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+Error al obtener los sensores:Error: Error obteniendo unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+Error al obtener los sensores:Error: Error obteniendo unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+Error al obtener los sensores:Error: Error obteniendo unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+Error al obtener los sensores:Error: Error obteniendo unidades
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+Error al obtener los sensores:TypeError: this.obtenerUnidades is not a function
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+Error al obtener los sensores:TypeError: this.obtenerUnidades is not a function
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+Error al obtener los sensores:TypeError: this.obtenerUnidades is not a function
+HTTP Response: {
+  "error": 4,
+  "reason": "VALIDATE_PARAMS_ERROR: {token: text}"
+}
+HTTP Response: {
+  "error": 1
+}
+Error al buscar unidades: código de error 1
+Error al buscar unidades:Error al buscar unidades: código de error 1
+Error al obtener los sensores:Error: Error al buscar unidades

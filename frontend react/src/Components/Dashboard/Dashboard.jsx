@@ -1,24 +1,27 @@
-//Dashboard.jsx
-import React from 'react'
+import React from 'react';
+import Sidebar from './Components/Sidebar Section/Sidebar';
+import Body from './Components/Body Section/Body';
 
-import Sidebar from '../Dashboard/Components/Sidebar Section/Sidebar'
-import Body from '../Dashboard/Components/Body Section/Body'
+import '../../App.scss'
 
 const Dashboard = () => {
-    return(
-        <div className="dashboard flex">
-            <div className="dashboardContainer flex">
-            <Sidebar/>
-            <Body/>
-            {/*<Routes>
-                    <Route path="/" element={<DashboardHome />} />
-                    <Route path="/" element={<Orders />} />
-                    <Route path="/products" element={<Products />} />
-                    <Route path="/settings" element={<Settings />} />
-            </Routes>*/}
+    const menuItems = [
+        { id: 1, name: 'Unidades', link: 'Unidades' },
+        { id: 2, name: 'Usuarios', link: 'Usuarios' },
+        { id: 2, name: 'Alertas', link: 'Alertas' },
+        { id: 3, name: 'Criterios', link: 'Criterios' },
+        { id: 4, name: 'Notificaciones', link: 'Notificaciones' },
+        // Add more menu items as needed
+    ];
+
+    return (
+        <div className='dashboard'>
+            <div className="dashboardContainer">
+                <Sidebar menuItems={menuItems} />
+                <Body />
             </div>
         </div>
-    )
+    );
 }
 
-export default Dashboard
+export default Dashboard;

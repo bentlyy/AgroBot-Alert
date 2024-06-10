@@ -1,5 +1,3 @@
-const pool = require('../utils/dbConnection');
-
 class SensorModel {
   constructor(pool) {
     this.pool = pool;

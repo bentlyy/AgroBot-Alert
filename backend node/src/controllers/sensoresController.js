@@ -1,48 +1,10 @@
 const SensorModel = require('../models/sensorModel');
+const pool = require('../utils/dbConnection');
 const { makeHttpRequest, loadMessages, getEidFromResponse, logToFile } = require('../utils/wialonApiUtils');
 
 class SensoresController {
   constructor() {
-    this.sensorModel = new SensorModel();
-  }
-
-  async obtenerTodosLosSensores() {
-    try {
-      const eid = await this.obtenerEid();
-
-      // Aquí vamos a obtener todas las unidades y luego obtener los mensajes de cada una
-      const unidades = await this.obtenerUnidades(eid);
-      logToFile(`Unidades obtenidas: ${JSON.stringify(unidades, null, 2)}`);  // Log unidades
-
-      const sensores = [];
-      for (const unidad of unidades) {
-        const mensajes = await loadMessages(eid, unidad.id);
-
-        mensajes.forEach(mensaje => {
-          sensores.push({
-            id_sensor: mensaje.Timestamp, // Asumiendo que el mensaje tiene un campo `Timestamp` como id_sensor
-            nombre: `Sensor de unidad ${unidad.name}`, // Puedes ajustar esto según el nombre real del sensor si está disponible
-            id_unidad: unidad.id
-          });
-        });
-      }
-      return sensores;
-    } catch (error) {
-      logToFile('Error al obtener los sensores:' + error);
-      throw error;
-    }
-  }
-
-  async guardarSensoresDeApi(sensores) {
-    try {
-      for (const sensor of sensores) {
-        await this.sensorModel.guardarSensor(sensor);
-      }
-      logToFile('Sensores guardados correctamente.');
-    } catch (error) {
-      logToFile('Error al guardar los sensores:' + error);
-      throw error;
-    }
+    this.sensorModel = new SensorModel(pool);
   }
 
   async obtenerEid() {
@@ -72,16 +34,52 @@ class SensoresController {
 
     try {
       const response = await makeHttpRequest('https://hst-api.wialon.us/wialon/ajax.html', params);
-      console.log('Respuesta de búsqueda de unidades:', response); // Agregar este registro
+      console.log('Respuesta de búsqueda de unidades:', response);
       if (response.error) {
+        logToFile(`Error al buscar unidades: código de error ${response.error}`);
         throw new Error(`Error al buscar unidades: código de error ${response.error}`);
       }
       return response.items;
     } catch (error) {
-      logToFile('Error al buscar unidades:' + error);
+      logToFile('Error al buscar unidades:' + error.message);
       throw new Error('Error al buscar unidades');
     }
-    
+  }
+
+  async obtenerTodosLosSensores() {
+    try {
+      const eid = await this.obtenerEid();
+      const unidades = await this.obtenerUnidades(eid);
+      logToFile(`Unidades obtenidas: ${JSON.stringify(unidades, null, 2)}`);
+
+      const sensores = [];
+      for (const unidad of unidades) {
+        const mensajes = await loadMessages(eid, unidad.id);
+        mensajes.forEach(mensaje => {
+          sensores.push({
+            id_sensor: mensaje.Timestamp, // Usar Timestamp como id_sensor
+            nombre: `Sensor de unidad ${unidad.params}`, // Nombre del sensor basado en la unidad
+            id_unidad: unidad.id
+          });
+        });
+      }
+      return sensores;
+    } catch (error) {
+      logToFile('Error al obtener los sensores:' + error);
+      throw error;
+    }
+  }
+
+  async guardarSensoresDeApi(sensores) {
+    try {
+      for (const sensor of sensores) {
+        await this.sensorModel.guardarSensor(sensor);
+      }
+      logToFile('Sensores guardados correctamente.');
+    } catch (error) {
+      logToFile('Error al guardar los sensores:' + error);
+      throw error;
+    }
   }
 }
 
