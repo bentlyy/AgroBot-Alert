@@ -1,3 +1,4 @@
+// app.js
 require('dotenv').config(); // Asegúrate de que esto esté al inicio del archivo
 
 const express = require('express');
@@ -33,7 +34,7 @@ app.use('/api/units', unidadesRoutes);
 app.use('/api/sensores', sensoresRoutes);
 app.use('/api/auth', recuperacionContraseñaRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/map', mapRoutes);
+//app.use('/api/map', mapRoutes);
 app.use('/api/alertas', alertasRoutes);
 
 // Crea instancias de tus controladores
@@ -63,7 +64,7 @@ async function obtenerYGuardarSensores() {
 
 // Ejecuta tus funciones asincrónicas
 obtenerYGuardarUnidades();
-//obtenerYGuardarSensores();
+//obtenerYGuardarSensores(); // Llama a la función corregida para obtener y guardar sensores
 
 // Inicia el servidor
 app.listen(app.get('port'), () => {   

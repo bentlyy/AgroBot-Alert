@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
-
+//sidebar.scss 
 * {
     padding: 0;
     box-sizing: border-box;
@@ -31,10 +31,12 @@
 .sidebar {
     background-color: var(--whiteColor);
     box-shadow: 1px 0px 4px var(--greyText);
-    max-width: 18px;
+    width: 18%; /* Cambia 'max-width' a 'width' y ajusta el valor según tus necesidades */
     height: 100%;
+    display: flex;
+    flex-direction: column;
     gap: 3rem;
-    overflow: auto; 
+    overflow: auto;
 
     .logoDiv {
         padding: 1.5rem 1.5rem 0;
