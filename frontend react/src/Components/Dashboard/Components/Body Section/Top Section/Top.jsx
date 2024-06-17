@@ -1,81 +1,28 @@
-import React, { useState, useEffect } from "react";
-import './top.css';
+import React from "react";
+import './top.css'
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import { BiSearchAlt } from "react-icons/bi";
 import { TbMessageCircle } from "react-icons/tb";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import 'leaflet/dist/leaflet.css';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import img from '../../../Assets/user(3).png';
+import { MdOutlineNotificationsNone } from "react-icons/md";
 
-const Top = ({ nombreUsuario }) => {
-    const [units, setUnits] = useState([]);
-    const [inactiveTime, setInactiveTime] = useState(0);
-    const navigate = useNavigate();
+import img from '../../../Assets/user(3).png'
+import video from '../../../Assets/video.mp4'
+import img2 from '../../../Assets/user(2).png'
 
-    // Función para restablecer el tiempo de inactividad
-    const resetInactiveTime = () => {
-        setInactiveTime(0);
-    };
+import { BsArrowRightShort } from "react-icons/bs";
 
-    // Función para manejar la inactividad del usuario
-    const handleInactive = () => {
-        setInactiveTime(prevTime => prevTime + 1);
-    };
 
-    // Función para cerrar sesión
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('usuario');
-        navigate('/');  // Redirigir a la página de inicio de sesión
-    };
-
-    // Efecto para iniciar el temporizador de inactividad
-    useEffect(() => {
-        const intervalId = setInterval(handleInactive, 1000);
-        return () => clearInterval(intervalId);
-    }, []);
-
-    // Efecto para comprobar si se ha alcanzado el tiempo de inactividad máximo
-    useEffect(() => {
-        const maxInactiveTime = 60 * 10; // 15 minutos de inactividad antes de cerrar sesión
-        if (inactiveTime >= maxInactiveTime) {
-            handleLogout(); // Cerrar sesión automáticamente
-        }
-    }, [inactiveTime]);
-
-    // Manejar el evento de actividad del usuario
-    const handleActivity = () => {
-        resetInactiveTime(); // Restablecer el tiempo de inactividad cuando hay actividad
-    };
-
-    // Adjuntar el detector de eventos de actividad del usuario
-    useEffect(() => {
-        document.addEventListener('mousemove', handleActivity);
-        document.addEventListener('keypress', handleActivity);
-        return () => {
-            document.removeEventListener('mousemove', handleActivity);
-            document.removeEventListener('keypress', handleActivity);
-        };
-    }, []);
-
-    useEffect(() => {
-        axios.get('http://localhost:3000/api/map')
-            .then(response => setUnits(response.data))
-            .catch(error => console.error('Error fetching unit data:', error));
-    }, []);
-
+const Top = () => {
     return (
         <div className="topSection">
             <div className="headerSection flex">
                 <div className="title">
-                    <h1>Agrobot Alert</h1>
-                    <p>Hola {nombreUsuario}, bienvenido de vuelta!</p>
+                    <h1>Welcome to Pranti.</h1>
+                    <p> Helllo isratech, welcome back!</p>
                 </div>
 
                 <div className="searchBar flex">
-                    <input type="text" placeholder='Busqueda por unidad' />
+                    <input type="text" placeholder='Search Dashboard' />
                     <BiSearchAlt className="icon"/>
                 </div>
 
@@ -83,38 +30,77 @@ const Top = ({ nombreUsuario }) => {
                     <TbMessageCircle className="icon"/>
                     <MdOutlineNotificationsNone className="icon"/>
                     <div className="adminImage">
-                        <img src={img} alt="Admin Image" />
-                        <button onClick={handleLogout} className="logoutButton">Cerrar Sesión</button>
-                    </div>
+                        <img src="{img}" alt="Admin Image" />    
+                    </div>                    
                 </div>
+
             </div>
 
             <div className="cardSection flex">
                 <div className="rightCard flex">
-                    <h1>Track and Monitor Your Units</h1>
-                    <p>View real-time data and locations of all your units on the map.</p>
+                    <h1>Create and sell extraordinary products</h1>
+                    <p>the worlds fast growinfsa indasdasshahdsa hsadhas hsdah sjdak</p>
 
-                    <div className="mapContainer">
-                        <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false} style={{ height: "400px", width: "100%" }}>
-                            <TileLayer
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                            />
-                            {units.map(unit => (
-                                <Marker key={unit.id_unidad} position={[unit.latitude, unit.longitude]}>
-                                    <Popup>
-                                        <h3>{unit.nombre}</h3>
-                                        <p>Sensor Data: {unit.sensorData}</p>
-                                        <p>Other Info: {unit.otherInfo}</p>
-                                    </Popup>
-                                </Marker>
-                            ))}
-                        </MapContainer>
+                    <div className="buttons flex">
+                        <button className="btn">Explore more</button>
+                        <button className="btn transparent">Top sellers</button>
                     </div>
+
+                    <div className="videoDiv">
+                        <video src={video} autoPlay loop muted ></video>
+                    </div>
+
                 </div>
+
+                <div className="leftCard flex">
+                    <div className="main flex">
+                        <div className="textDiv">
+                            <h1>My stat</h1>
+
+                            <div className="flex">
+                                <span>
+                                    Today <br/> <small>4 Orders</small>
+                                </span>
+                            </div>
+                            
+                            <div className="flex">
+                                <span>
+                                    This Month <br/> <small>175 Orders</small>
+                                </span>
+                            </div>
+
+                            <span className="flex link">
+                                Go to my orders <BsArrowRightShort
+                                className="icon"/>
+                            </span>
+
+                        </div>
+
+                        <div className="imgDiv">
+                            <img src={img2} alt="Image Name" />
+                        </div>
+
+                        <div className="sideBarCard">
+                            <BsQuestionCircle className="icon"/>
+                            <div className="cardContent">
+                              <div className="circle1"></div>
+                              <div className="circle2"></div>
+
+                              <h3>help center</h3>
+
+                              <p>having trouble in planti, please contact us from for more questuions..</p>
+                
+                              <button className="btn">go to help center</button>
+                            </div>
+
+                        </div>
+                </div>
+
             </div>
         </div>
-    );
+
+    </div>
+    )
 }
 
-export default Top;
+export default Top

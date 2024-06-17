@@ -1,21 +1,19 @@
-class SensorModel {
-  constructor(pool) {
+// unidadesModel.js
+const pool = require('../utils/dbConnection');
+
+class SensoresModel {
+  constructor(pool) {  
     this.pool = pool;
   }
 
   async guardarSensor(sensor) {
-    const { id_sensor, nombre, id_unidad } = sensor;
-    if (!id_sensor || !nombre || !id_unidad) {
-      console.error('Datos del sensor incompletos:', sensor);
-      return Promise.reject(new Error('Datos del sensor incompletos'));
-    }
-
-    const query = 'INSERT INTO sensores (id_sensor, nombre, id_unidad) VALUES (?, ?, ?)';
-    const values = [id_sensor, nombre, id_unidad];
+    const { id_unidad, temperatura_s1, temperatura_s2, humedad_s1, humedad_s2, electroconductividad_s1, electroconductividad_s2, gps_energia, energia_externa } = sensor;
 
     try {
+      // Insertar los valores de los sensores en la base de datos
+      const query = 'INSERT INTO sensores (id_unidad, temperatura_s1, temperatura_s2, humedad_s1, humedad_s2, electroconductividad_s1, electroconductividad_s2, gps_energia, energia_externa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
       await new Promise((resolve, reject) => {
-        this.pool.query(query, values, (error, results) => {
+        this.pool.query(query, [id_unidad, temperatura_s1, temperatura_s2, humedad_s1, humedad_s2, electroconductividad_s1, electroconductividad_s2, gps_energia, energia_externa], (error, results, fields) => {
           if (error) {
             console.error('Error al guardar el sensor:', error);
             return reject(new Error('Error al guardar el sensor'));
@@ -29,4 +27,4 @@ class SensorModel {
   }
 }
 
-module.exports = SensorModel;
+module.exports = SensoresModel;

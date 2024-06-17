@@ -19,7 +19,6 @@ async function makeHttpRequest(url, params) {
     params.sid = process.env.API_TOKEN; // Agregar el token a los parámetros
     try {
         const response = await axios.get(url, { params });
-        logToFile(`HTTP Response: ${JSON.stringify(response.data, null, 2)}`);
         return response.data;
     } catch (error) {
         logToFile('Error:' + error);
@@ -50,14 +49,7 @@ async function searchUnits(eid) {
         }),
         sid: eid
     };
-    const response = await makeHttpRequest('https://hst-api.wialon.us/wialon/ajax.html', params);
-    logToFile(`Search Units Response: ${JSON.stringify(response, null, 2)}`);
-
-    if (response.error) {
-        throw new Error(`Error al buscar unidades: código de error ${response.error}`);
-    }
-
-    return response;
+    return makeHttpRequest('https://hst-api.wialon.us/wialon/ajax.html', params);
 }
 
 // Función para cargar mensajes
@@ -65,12 +57,12 @@ async function loadMessages(eid, unitId) {
     const today = new Date();
     today.setHours(23, 59, 59, 999);
     const todayUnixTimestamp = Math.floor(today.getTime() / 1000);
-  
+
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     yesterday.setHours(0, 0, 0, 0);
     const yesterdayUnixTimestamp = Math.floor(yesterday.getTime() / 1000);
-  
+
     const params = {
         svc: 'messages/load_interval',
         params: JSON.stringify({
@@ -88,9 +80,6 @@ async function loadMessages(eid, unitId) {
         logToFile("Mensajes cargados para la unidad " + unitId);
         const formattedMessages = response.messages.map(message => {
             const formattedMessage = {
-                id_sensor: message.t, // Asumiendo que `message.t` es único y puede ser usado como id_sensor
-                nombre: `Sensor de unidad ${unitId}`,
-                id_unidad: unitId,
                 Timestamp: message.t,
                 Flags: message.f,
                 Type: message.tp,
@@ -129,7 +118,9 @@ async function loadMessages(eid, unitId) {
 
 module.exports = {
     makeHttpRequest,
-    loadMessages,
     getEidFromResponse,
-    logToFile
+    searchUnits,
+    loadMessages,
+    logToFile,
+    logMessages
 };
