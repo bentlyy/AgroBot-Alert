@@ -1,19 +1,13 @@
-// app.js
-require('dotenv').config(); // Asegúrate de que esto esté al inicio del archivo
-
 const express = require('express');
 const morgan = require('morgan');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-const cors = require('cors');
-const unidadesRoutes = require('./routes/unidadesRoutes');
 const sensoresRoutes = require('./routes/sensoresRoutes');
-const recuperacionContraseñaRoutes = require('./routes/recuperacionContraseñaRoutes');
-const authRoutes = require('./routes/authRoutes');
-const mapRoutes = require('./routes/mapRoutes');
-const alertasRoutes = require('./routes/alertasRoutes');
 const UnidadesController = require('./controllers/unidadesController');
 const SensoresController = require('./controllers/sensoresController');
+const recuperacionContraseñaRoutes = require('./routes/recuperacionContraseñaRoutes');
+const authRoutes = require('./routes/authRoutes');
+const cors = require('cors');
 
 const app = express(); // Inicializa Express
 
@@ -30,12 +24,9 @@ app.use(session({
 }));
 
 // Define tus rutas
-app.use('/api/units', unidadesRoutes);
 app.use('/api/sensores', sensoresRoutes);
 app.use('/api/auth', recuperacionContraseñaRoutes);
 app.use('/api/auth', authRoutes);
-//app.use('/api/map', mapRoutes);
-app.use('/api/alertas', alertasRoutes);
 
 // Crea instancias de tus controladores
 const unidadesController = new UnidadesController();
@@ -64,7 +55,8 @@ async function obtenerYGuardarSensores() {
 
 // Ejecuta tus funciones asincrónicas
 obtenerYGuardarUnidades();
-//obtenerYGuardarSensores(); // Llama a la función corregida para obtener y guardar sensores
+obtenerYGuardarSensores();
+
 
 // Inicia el servidor
 app.listen(app.get('port'), () => {   

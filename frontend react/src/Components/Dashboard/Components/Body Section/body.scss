@@ -1,14 +1,19 @@
-//body.scss 
-.mainContent {
-    flex: 1;
+.mainContent{
+    width: 82%;
+    height: 100%;
     padding: 2rem;
     overflow: auto;
 
-    .bottom {
+    .bottom{
         margin-top: 2rem;
         gap: 2rem;
         align-items: flex-start;
-        display: flex; /* Añadido */
-        flex-direction: column; /* O ajustar según el diseño */
+
+    }
+}
+
+@media screen and (max-width: 918px) {
+    .bottom{
+        color: black;
     }
 }

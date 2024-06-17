@@ -1,47 +1,69 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './activity.css';
+import React from "react";
+import './activity.css'
+import { BsArrowRightCircle, BsArrowRightShort } from "react-icons/bs";
+
+import user from '../../../Assets/user(1).png'
 
 const Activity = () => {
-  const [alerts, setAlerts] = useState([]);
-  const [notifications, setNotifications] = useState([]);
+    return (
+        <div className="activitySection">
+            <div className="heading flex">
+                <h1>Resent Activity</h1>
+                <button className="btn flex">
+                    See all
+                    <BsArrowRightShort className="icon"/>
+                </button>
+            </div>
 
-  useEffect(() => {
-    axios.get('http://localhost:3000/api/alertas/alertas')
-      .then(response => setAlerts(response.data))
-      .catch(error => console.error('Error fetching alerts:', error));
+            <div className="secContainer grid">
 
-    axios.get('http://localhost:3000/api/alertas/notificaciones')
-      .then(response => setNotifications(response.data))
-      .catch(error => console.error('Error fetching notifications:', error));
-  }, []);
+                <div className="singleCustomer flex">
+                    <img src={user} alt="Customer Image" />
+                    <div className="customerDetails">
+                        <span className="name">Ola Martha</span>
+                        <small>Ordered a neew plant</small>
+                    </div>
+                    <div className="duration">
+                        2 min ago
+                    </div>
+                </div>
 
-  return (
-    <div className="activitySection">
-      <div className="alerts">
-        <h2>Alertas Recientes</h2>
-        <ul>
-          {alerts.map(alert => (
-            <li key={alert.id_alerta}>
-              <p>{alert.mensaje}</p>
-              <small>{alert.timestamp}</small>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="notifications">
-        <h2>Notificaciones Recientes</h2>
-        <ul>
-          {notifications.map(notification => (
-            <li key={notification.id_notificacion}>
-              <p>{notification.mensaje}</p>
-              <small>{notification.timestamp}</small>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-};
+                <div className="singleCustomer flex">
+                    <img src={user} alt="Customer Image" />
+                    <div className="customerDetails">
+                        <span className="name">Ola Martha</span>
+                        <small>Ordered a neew plant</small>
+                    </div>
+                    <div className="duration">
+                        2 min ago
+                    </div>
+                </div>
 
-export default Activity;
+                <div className="singleCustomer flex">
+                    <img src={user} alt="Customer Image" />
+                    <div className="customerDetails">
+                        <span className="name">Ola Martha</span>
+                        <small>Ordered a neew plant</small>
+                    </div>
+                    <div className="duration">
+                        2 min ago
+                    </div>
+                </div>
+
+                <div className="singleCustomer flex">
+                    <img src={user} alt="Customer Image" />
+                    <div className="customerDetails">
+                        <span className="name">Ola Martha</span>
+                        <small>Ordered a neew plant</small>
+                    </div>
+                    <div className="duration">
+                        2 min ago
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    )
+}
+
+export default Activity
