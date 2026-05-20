@@ -19,13 +19,14 @@ const sensorIcon = L.divIcon({
   iconAnchor: [8, 8],
 });
 
-const MapView = () => {
+const MapView = ({ selectedUserId }) => {
   const [unidades, setUnidades] = useState([]);
   const [sensores, setSensores] = useState({});
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    axios.get('/api/unidades').then(res => setUnidades(res.data)).catch(() => {});
+    const params = selectedUserId ? `?id_usuario=${selectedUserId}` : '';
+    axios.get(`/api/unidades${params}`).then(res => setUnidades(res.data)).catch(() => {});
     axios.get('/api/sensores').then(res => {
       const map = {};
       res.data.forEach(s => {
@@ -34,7 +35,7 @@ const MapView = () => {
       });
       setSensores(map);
     }).catch(() => {});
-  }, []);
+  }, [selectedUserId]);
 
   const center = unidades.length > 0
     ? [parseFloat(unidades[0].latitude), parseFloat(unidades[0].longitude)]

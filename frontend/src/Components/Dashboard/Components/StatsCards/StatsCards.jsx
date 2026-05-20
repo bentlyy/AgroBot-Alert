@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { MdSensors, MdOutlineAgriculture } from 'react-icons/md';
@@ -19,19 +19,26 @@ const iconColorMap = {
   usuarios: 'indigo',
 };
 
-const StatsCards = () => {
+const StatsCards = ({ selectedUserId }) => {
   const [stats, setStats] = useState({ unidades: 0, sensores: 0, alertas: 0, usuarios: 0 });
 
-  useEffect(() => {
+  const fetchStats = useCallback(() => {
+    const params = selectedUserId ? `?id_usuario=${selectedUserId}` : '';
     Promise.all([
-      axios.get('/api/unidades').then(r => r.data.length).catch(() => 0),
+      axios.get(`/api/unidades${params}`).then(r => r.data.length).catch(() => 0),
       axios.get('/api/sensores').then(r => r.data.length).catch(() => 0),
-      axios.get('/api/alertas').then(r => r.data.length).catch(() => 0),
+      axios.get(`/api/alertas${params}`).then(r => r.data.length).catch(() => 0),
       axios.get('/api/usuarios').then(r => r.data.length).catch(() => 0),
     ]).then(([unidades, sensores, alertas, usuarios]) => {
       setStats({ unidades, sensores, alertas, usuarios });
     });
-  }, []);
+  }, [selectedUserId]);
+
+  useEffect(() => {
+    fetchStats();
+    const interval = setInterval(fetchStats, 30000);
+    return () => clearInterval(interval);
+  }, [fetchStats]);
 
   const cards = [
     { key: 'unidades', label: 'Unidades', value: stats.unidades, trend: '+2', trendDir: 'up' },

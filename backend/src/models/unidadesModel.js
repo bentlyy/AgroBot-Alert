@@ -5,10 +5,17 @@ class UnidadesModel {
     this.pool = pool;
   }
 
-  async obtenerUnidades() {
-    const query = 'SELECT * FROM unidades';
+  async obtenerUnidades(idUsuario) {
+    let query = `SELECT u.*, us.nombre AS usuario_nombre, us.email AS usuario_email
+      FROM unidades u
+      LEFT JOIN usuarios us ON u.id_usuario = us.id`;
+    const params = [];
+    if (idUsuario) {
+      query += ' WHERE u.id_usuario = ?';
+      params.push(idUsuario);
+    }
     return new Promise((resolve, reject) => {
-      this.pool.query(query, (error, results) => {
+      this.pool.query(query, params, (error, results) => {
         if (error) {
           console.error('Error obteniendo unidades:', error);
           return reject(new Error('Error obteniendo unidades'));

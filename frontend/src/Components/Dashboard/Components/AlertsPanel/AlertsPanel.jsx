@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import { MdWarning, MdError, MdInfo, MdArrowForward } from 'react-icons/md';
+import { MdWarning, MdError, MdInfo, MdArrowForward, MdPerson } from 'react-icons/md';
 
 const alertIcons = {
   critico: <MdWarning style={{ color: '#ef4444' }} />,
@@ -9,12 +9,27 @@ const alertIcons = {
   info: <MdInfo style={{ color: '#3b82f6' }} />,
 };
 
-const AlertsPanel = ({ full }) => {
+const AlertsPanel = ({ full, selectedUserId }) => {
   const [alertas, setAlertas] = useState([]);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    axios.get('/api/alertas').then(res => setAlertas(res.data)).catch(() => {});
+    const stored = localStorage.getItem('user');
+    if (stored) setUser(JSON.parse(stored));
   }, []);
+
+  const isAdmin = user?.rol === 'admin';
+
+  const fetchAlertas = useCallback(() => {
+    const params = selectedUserId ? `?id_usuario=${selectedUserId}` : '';
+    axios.get(`/api/alertas${params}`).then(res => setAlertas(res.data)).catch(() => {});
+  }, [selectedUserId]);
+
+  useEffect(() => {
+    fetchAlertas();
+    const interval = setInterval(fetchAlertas, 15000);
+    return () => clearInterval(interval);
+  }, [fetchAlertas]);
 
   const timeAgo = (dateStr) => {
     const diff = Date.now() - new Date(dateStr).getTime();
@@ -54,6 +69,12 @@ const AlertsPanel = ({ full }) => {
             <div className="alertContent">
               <div className="alertTitle">{a.tipo === 'critico' ? 'Crítico' : a.tipo === 'advertencia' ? 'Advertencia' : 'Información'}</div>
               <div className="alertMsg">{a.mensaje}</div>
+              {isAdmin && a.usuario_nombre && (
+                <div className="alertUser">
+                  <MdPerson style={{ marginRight: 4, fontSize: 12 }} />
+                  {a.usuario_nombre} - {a.usuario_email}
+                </div>
+              )}
             </div>
             <div className="alertTime">{timeAgo(a.fecha_creacion)}</div>
           </motion.div>

@@ -11,25 +11,26 @@ USE agro5;
 -- NOTA: El hash debe generarse con bcrypt. Si no funciona,
 --       usa el endpoint POST /api/auth/register para crearlo.
 -- ============================================================
-INSERT INTO usuarios (email, nombre, contrasena, rol) VALUES
-  ('admin@agrobot.com', 'Administrador', '$2b$10$8K1p/a0dL1LXMIgoEDFrwOfMQkfAjkMBcGmF0xP7FGxP/.KJFOxuS', 'admin'),
-  ('demo@agrobot.com', 'Demo User', '$2b$10$8K1p/a0dL1LXMIgoEDFrwOfMQkfAjkMBcGmF0xP7FGxP/.KJFOxuS', 'usuario');
+INSERT INTO usuarios (email, nombre, contrasena, rol, telefono) VALUES
+  ('admin@agrobot.com', 'Administrador', '$2b$10$8K1p/a0dL1LXMIgoEDFrwOfMQkfAjkMBcGmF0xP7FGxP/.KJFOxuS', 'admin',   null),
+  ('garayaa0606@gmail.com', 'Usuario Demo', '$2b$10$8K1p/a0dL1LXMIgoEDFrwOfMQkfAjkMBcGmF0xP7FGxP/.KJFOxuS', 'usuario', '+56953818617');
 
 -- ============================================================
 -- Usuario para recuperación de contraseña
 -- ============================================================
 INSERT INTO users (username, email, password) VALUES
-  ('Administrador', 'admin@agrobot.com', '$2b$10$8K1p/a0dL1LXMIgoEDFrwOfMQkfAjkMBcGmF0xP7FGxP/.KJFOxuS');
+  ('Administrador', 'admin@agrobot.com', '$2b$10$8K1p/a0dL1LXMIgoEDFrwOfMQkfAjkMBcGmF0xP7FGxP/.KJFOxuS'),
+  ('Usuario Demo',  'garayaa0606@gmail.com', '$2b$10$8K1p/a0dL1LXMIgoEDFrwOfMQkfAjkMBcGmF0xP7FGxP/.KJFOxuS');
 
 -- ============================================================
--- Unidades de monitoreo
+-- Unidades de monitoreo (todas asignadas al usuario demo)
 -- ============================================================
 INSERT INTO unidades (id_unidad, nombre, id_usuario, latitude, longitude) VALUES
-  (1001, 'Estación Central',     1, -33.4567890, -70.6500000),
-  (1002, 'Tractor 01 - Sur',     1, -33.5000000, -70.6200000),
-  (1003, 'Estación Norte',       1, -33.4000000, -70.7000000),
+  (1001, 'Estacion Central',     2, -33.4567890, -70.6500000),
+  (1002, 'Tractor 01 - Sur',     2, -33.5000000, -70.6200000),
+  (1003, 'Estacion Norte',       2, -33.4000000, -70.7000000),
   (1004, 'Tractor 02 - Este',    2, -33.4800000, -70.5800000),
-  (1005, 'Estación Oeste',       2, -33.5200000, -70.7200000);
+  (1005, 'Estacion Oeste',       2, -33.5200000, -70.7200000);
 
 -- ============================================================
 -- Sensores
@@ -61,11 +62,11 @@ INSERT INTO mediciones (id_sensor, valor, timestamp) VALUES
 -- Criterios para alertas
 -- ============================================================
 INSERT INTO criterios (nombre, accion, valor_referencia_max, valor_referencia_min) VALUES
-  ('Temperatura alta',       'enviar_alerta_whatsapp', 35.0, NULL),
-  ('Temperatura baja',       'enviar_alerta_whatsapp', NULL, 5.0),
-  ('Humedad crítica baja',   'enviar_alerta_whatsapp', NULL, 30.0),
-  ('Humedad excesiva',       'enviar_alerta_whatsapp', 90.0, NULL),
-  ('Batería baja',           'enviar_alerta_whatsapp', NULL, 20.0);
+  ('Temperatura alta',       'enviar_alerta_email_whatsapp', 35.0, NULL),
+  ('Temperatura baja',       'enviar_alerta_email_whatsapp', NULL, 5.0),
+  ('Humedad critica baja',   'enviar_alerta_email_whatsapp', NULL, 30.0),
+  ('Humedad excesiva',       'enviar_alerta_email_whatsapp', 90.0, NULL),
+  ('Bateria baja',           'enviar_alerta_email_whatsapp', NULL, 20.0);
 
 -- ============================================================
 -- Alertas de ejemplo

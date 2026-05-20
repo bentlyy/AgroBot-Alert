@@ -19,7 +19,7 @@ class LoginController {
           process.env.JWT_SECRET || 'your_secret_key',
           { expiresIn: '24h' }
         );
-        res.send({ token, usuario: { id: usuario[0].id, nombre: usuario[0].nombre, rol: usuario[0].rol } });
+        res.send({ token, usuario: { id: usuario[0].id, nombre: usuario[0].nombre, email: usuario[0].email, rol: usuario[0].rol } });
       } else {
         res.status(401).send({ message: 'Las credenciales no coinciden' });
       }

@@ -29,33 +29,37 @@ async function seed() {
   const hashedPassword = await bcrypt.hash('admin123', 10);
 
   // 1. Usuarios
-  await connection.query(`DELETE FROM usuarios WHERE email IN ('admin@agrobot.com', 'demo@agrobot.com')`);
+  await connection.query(`DELETE FROM usuarios WHERE email IN ('admin@agrobot.com', 'garayaa0606@gmail.com')`);
   const usuariosRows = [
-    ['admin@agrobot.com', 'Administrador', hashedPassword, 'admin'],
-    ['demo@agrobot.com', 'Demo User', hashedPassword, 'usuario']
+    ['admin@agrobot.com', 'Administrador', hashedPassword, 'admin', null],
+    ['garayaa0606@gmail.com', 'Usuario Demo', hashedPassword, 'usuario', '+56953818617']
   ];
   await connection.query(
-    'INSERT INTO usuarios (email, nombre, contrasena, rol) VALUES ?',
+    'INSERT INTO usuarios (email, nombre, contrasena, rol, telefono) VALUES ?',
     [usuariosRows]
   );
-  console.log('✓ Usuarios creados (admin / admin123 y demo / admin123)');
+  console.log('✓ Usuarios creados (admin) y (garayaa0606@gmail.com / admin123)');
 
   // 2. Password recovery user
-  await connection.query(`DELETE FROM users WHERE email = 'admin@agrobot.com'`);
+  await connection.query(`DELETE FROM users WHERE email IN ('admin@agrobot.com', 'garayaa0606@gmail.com')`);
   await connection.query(
     'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
     ['Administrador', 'admin@agrobot.com', hashedPassword]
+  );
+  await connection.query(
+    'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
+    ['Usuario Demo', 'garayaa0606@gmail.com', hashedPassword]
   );
   console.log('✓ Tabla users poblada');
 
   // 3. Unidades
   await connection.query('DELETE FROM unidades WHERE id_unidad >= 1000');
   const unidadesRows = [
-    [1001, 'Estación Central',    1, -33.4567890, -70.6500000],
-    [1002, 'Tractor 01 - Sur',    1, -33.5000000, -70.6200000],
-    [1003, 'Estación Norte',      1, -33.4000000, -70.7000000],
+    [1001, 'Estacion Central',    2, -33.4567890, -70.6500000],
+    [1002, 'Tractor 01 - Sur',    2, -33.5000000, -70.6200000],
+    [1003, 'Estacion Norte',      2, -33.4000000, -70.7000000],
     [1004, 'Tractor 02 - Este',   2, -33.4800000, -70.5800000],
-    [1005, 'Estación Oeste',      2, -33.5200000, -70.7200000],
+    [1005, 'Estacion Oeste',      2, -33.5200000, -70.7200000],
   ];
   await connection.query(
     'INSERT INTO unidades (id_unidad, nombre, id_usuario, latitude, longitude) VALUES ?',
@@ -99,11 +103,11 @@ async function seed() {
   // 6. Criterios
   await connection.query('DELETE FROM criterios WHERE id >= 1');
   const criteriosRows = [
-    ['Temperatura alta',     'enviar_alerta_whatsapp', 35.0, null],
-    ['Temperatura baja',     'enviar_alerta_whatsapp', null, 5.0],
-    ['Humedad crítica baja', 'enviar_alerta_whatsapp', null, 30.0],
-    ['Humedad excesiva',     'enviar_alerta_whatsapp', 90.0, null],
-    ['Batería baja',         'enviar_alerta_whatsapp', null, 20.0],
+    ['Temperatura alta',     'enviar_alerta_email_whatsapp', 35.0, null],
+    ['Temperatura baja',     'enviar_alerta_email_whatsapp', null, 5.0],
+    ['Humedad critica baja', 'enviar_alerta_email_whatsapp', null, 30.0],
+    ['Humedad excesiva',     'enviar_alerta_email_whatsapp', 90.0, null],
+    ['Bateria baja',         'enviar_alerta_email_whatsapp', null, 20.0],
   ];
   await connection.query(
     'INSERT INTO criterios (nombre, accion, valor_referencia_max, valor_referencia_min) VALUES ?',
@@ -141,8 +145,8 @@ async function seed() {
   await connection.end();
   console.log('\n✅ Base de datos poblada exitosamente.');
   console.log('\nCredenciales de prueba:');
-  console.log('  Admin: admin@agrobot.com / admin123');
-  console.log('  Demo:  demo@agrobot.com  / admin123');
+  console.log('  Admin: admin@agrobot.com           / admin123');
+  console.log('  Demo:  garayaa0606@gmail.com / admin123 (con 5 unidades)');
 }
 
 seed().catch(err => {

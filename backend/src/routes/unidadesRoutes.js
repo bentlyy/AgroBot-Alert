@@ -7,7 +7,8 @@ const unidadesController = new UnidadesController();
 
 router.get('/', async (req, res, next) => {
   try {
-    const unidades = await unidadesController.obtenerTodasLasUnidades();
+    const idUsuario = req.query.id_usuario || null;
+    const unidades = await unidadesController.obtenerTodasLasUnidades(idUsuario);
     res.json(unidades);
   } catch (error) {
     next(error);

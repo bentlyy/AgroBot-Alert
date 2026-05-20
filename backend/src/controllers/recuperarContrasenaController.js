@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const User = require('../models/recuperacionModel');
-const enviarCorreoRecuperacion = require('../utils/emailService');
+const { enviarCorreoRecuperacion } = require('../utils/emailService');
 
 const recuperarContrasenaController = {};
 

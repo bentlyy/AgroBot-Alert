@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
   nombre      VARCHAR(100) NOT NULL,
   contrasena  VARCHAR(255) NOT NULL,
   rol         VARCHAR(50)  NOT NULL DEFAULT 'usuario',
+  telefono    VARCHAR(20),
   created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
@@ -109,38 +110,47 @@ CREATE TABLE IF NOT EXISTS campos (
 -- ============================================================
 
 -- Usuarios (contraseña: admin123)
-INSERT INTO usuarios (email, nombre, contrasena, rol) VALUES
-  ('admin@agrobot.com', 'Administrador', '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u', 'admin'),
-  ('demo@agrobot.com',  'Demo User',     '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u', 'usuario');
+INSERT INTO usuarios (email, nombre, contrasena, rol, telefono) VALUES
+  ('admin@agrobot.com',       'Administrador',   '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u', 'admin',   null),
+  ('garayaa0606@gmail.com',  'Usuario Demo',    '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u', 'usuario', '+56953818617'),
+  ('demo2@agrobot.com',      'Agricultor Juan', '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u', 'usuario', null),
+  ('demo3@agrobot.com',      'Maria Gonzalez',  '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u', 'usuario', null);
 
 -- Tabla users (recuperación)
 INSERT INTO users (username, email, password) VALUES
-  ('Administrador', 'admin@agrobot.com', '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u');
+  ('Administrador',   'admin@agrobot.com', '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u'),
+  ('Usuario Demo',    'garayaa0606@gmail.com', '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u'),
+  ('Agricultor Juan', 'demo2@agrobot.com', '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u'),
+  ('Maria Gonzalez',  'demo3@agrobot.com', '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u');
 
--- Unidades
+-- Unidades (1001-1005 = usuario demo 2, 1006 = Agricultor Juan 3, 1007 = Maria Gonzalez 4)
 INSERT INTO unidades (id_unidad, nombre, id_usuario, latitude, longitude) VALUES
-  (1001, 'Estacion Central',   1, -33.4567890, -70.6500000),
-  (1002, 'Tractor 01 - Sur',   1, -33.5000000, -70.6200000),
-  (1003, 'Estacion Norte',     1, -33.4000000, -70.7000000),
-  (1004, 'Tractor 02 - Este',  2, -33.4800000, -70.5800000),
-  (1005, 'Estacion Oeste',     2, -33.5200000, -70.7200000);
+  (1001, 'Estacion Central',    2, -33.4567890, -70.6500000),
+  (1002, 'Tractor 01 - Sur',    2, -33.5000000, -70.6200000),
+  (1003, 'Estacion Norte',      2, -33.4000000, -70.7000000),
+  (1004, 'Tractor 02 - Este',   2, -33.4800000, -70.5800000),
+  (1005, 'Estacion Oeste',      2, -33.5200000, -70.7200000),
+  (1006, 'Sector Viñedo',       3, -33.4400000, -70.6700000),
+  (1007, 'Sector Bosque',       4, -33.4100000, -70.6300000);
 
 -- Sensores
 INSERT INTO sensores (id_unidad, nombre, temperatura_s1, temperatura_s2, humedad_s1, humedad_s2, electroconductividad_s1, electroconductividad_s2, gps_energia, energia_externa) VALUES
-  (1001, 'Sensor T-H Central',    25.3, 24.8, 65.2, 63.1, 1.2, 1.3, 4.8, 5.0),
-  (1001, 'Sensor EC Central',     26.1, 25.4, 64.0, 62.5, 1.5, 1.6, 4.7, 5.0),
-  (1002, 'Sensor Tractor Sur',    32.7, 31.9, 45.0, 43.2, 0.8, 0.9, 3.2, 4.1),
-  (1003, 'Sensor Estacion Norte', 18.5, 17.9, 78.3, 76.8, 1.0, 1.1, 4.9, 5.0),
-  (1004, 'Sensor Tractor Este',   29.4, 28.7, 52.1, 50.3, 0.7, 0.8, 3.5, 4.3),
-  (1005, 'Sensor Estacion Oeste', 21.2, 20.6, 71.5, 70.0, 1.1, 1.2, 4.6, 5.0);
+  (1001, 'Sensor T-H Central',      25.3, 24.8, 65.2, 63.1, 1.2, 1.3, 4.8, 5.0),
+  (1001, 'Sensor EC Central',       26.1, 25.4, 64.0, 62.5, 1.5, 1.6, 4.7, 5.0),
+  (1002, 'Sensor Tractor Sur',      32.7, 31.9, 45.0, 43.2, 0.8, 0.9, 3.2, 4.1),
+  (1003, 'Sensor Estacion Norte',   18.5, 17.9, 78.3, 76.8, 1.0, 1.1, 4.9, 5.0),
+  (1004, 'Sensor Tractor Este',     29.4, 28.7, 52.1, 50.3, 0.7, 0.8, 3.5, 4.3),
+  (1005, 'Sensor Estacion Oeste',   21.2, 20.6, 71.5, 70.0, 1.1, 1.2, 4.6, 5.0),
+  (1006, 'Sensor Viñedo',           22.8, 22.1, 55.3, 53.8, 1.3, 1.4, 4.2, 4.8),
+  (1007, 'Sensor Bosque',           19.5, 19.0, 72.1, 70.5, 0.9, 1.0, 4.5, 4.9);
 
 -- Criterios
 INSERT INTO criterios (nombre, accion, valor_referencia_max, valor_referencia_min) VALUES
-  ('Temperatura alta',     'enviar_alerta_whatsapp', 35.0, null),
-  ('Temperatura baja',     'enviar_alerta_whatsapp', null, 5.0),
-  ('Humedad critica baja', 'enviar_alerta_whatsapp', null, 30.0),
-  ('Humedad excesiva',     'enviar_alerta_whatsapp', 90.0, null),
-  ('Bateria baja',         'enviar_alerta_whatsapp', null, 20.0);
+  ('Temperatura alta',     'enviar_alerta_email_whatsapp', 35.0, null),
+  ('Temperatura baja',     'enviar_alerta_email_whatsapp', null, 5.0),
+  ('Humedad critica baja', 'enviar_alerta_email_whatsapp', null, 30.0),
+  ('Humedad excesiva',     'enviar_alerta_email_whatsapp', 90.0, null),
+  ('Bateria baja',         'enviar_alerta_email_whatsapp', null, 20.0);
 
 -- Alertas
 INSERT INTO alertas (mensaje, tipo, id_unidad, id_criterio, fecha_creacion) VALUES
