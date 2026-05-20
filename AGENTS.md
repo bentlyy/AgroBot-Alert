@@ -2,7 +2,7 @@
 
 ## Stack
 
-- **Backend:** Node.js + Express + MySQL 8 (Docker)
+- **Backend:** Node.js + Express + MySQL 8 (Docker) + Twilio + Nodemailer
 - **Frontend:** React 18 + Vite + Recharts + Leaflet + Framer Motion
 - **DB:** MySQL 8 corriendo en Docker compose
 
@@ -18,10 +18,10 @@ docker compose up -d         # Inicia MySQL + Backend + Frontend
 
 ## Credenciales de prueba
 
-| Email | Password | Rol |
-|---|---|---|
-| admin@agrobot.com | admin123 | admin |
-| demo@agrobot.com | admin123 | usuario |
+| Email | Password | Rol | Telefono | Unidades asignadas |
+|---|---|---|---|---|
+| admin@agrobot.com | admin123 | admin | — | ninguna (ve todas) |
+| garayaa0606@gmail.com | admin123 | usuario | +56953818617 | 5 unidades |
 
 ## Estructura del proyecto
 
@@ -87,6 +87,8 @@ AgroBot-Alert/
 
 - **No JWT middleware** — los endpoints no están protegidos (solo el frontend verifica token en localStorage)
 - **Mock API** — `USE_MOCK_API=true` en `.env` genera datos falsos sin Wialon real
+- **Alert Engine** — `alertEngine.js` refresca datos y evalúa criterios cada 60s; previene duplicados (15 min)
+- **Notificaciones** — `notificacionService.js` envía alertas por email (nodemailer) y/o WhatsApp (Twilio) según el campo `accion` del criterio
 - **Reintento DB** — `dbConnection.js` tiene retry exponencial hasta conectar
 - **Seed automático** — `init.sql` se ejecuta al crear el contenedor MySQL por primera vez
 - **Encoding** — usar solo ASCII (sin tildes/ñ) en SQL para evitar corrupción al pipear desde Windows → Docker

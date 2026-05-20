@@ -6,9 +6,9 @@ class UnidadesController {
     this.unidadesModel = new UnidadesModel(pool);
   }
 
-  async obtenerTodasLasUnidades() {
+  async obtenerTodasLasUnidades(idUsuario) {
     try {
-      return await this.unidadesModel.obtenerUnidades();
+      return await this.unidadesModel.obtenerUnidades(idUsuario);
     } catch (error) {
       console.error('Error obteniendo unidades:', error);
       throw new Error('Error obteniendo unidades');

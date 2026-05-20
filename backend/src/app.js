@@ -21,6 +21,7 @@ const UnidadesModel = require('./models/unidadesModel');
 const SensoresModel = require('./models/sensorModel');
 const pool = require('./utils/dbConnection');
 const wialon = require('./utils/wialonService');
+const alertEngine = require('./utils/alertEngine');
 
 const app = express();
 
@@ -91,7 +92,10 @@ async function seedearDesdeWialon() {
   }
 }
 
-pool.ready.then(seedearDesdeWialon);
+pool.ready.then(async () => {
+  await seedearDesdeWialon();
+  alertEngine.startAlertEngine();
+});
 
 app.listen(app.get('port'), () => {
   console.log(`Servidor escuchando en el puerto ${app.get('port')}`);

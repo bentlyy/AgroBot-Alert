@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
   MdDashboard, MdOutlineAgriculture, MdSensors, MdOutlineNotifications,
-  MdPeople, MdLogout, MdWarning, MdMenu
+  MdPeople, MdLogout, MdWarning, MdMenu, MdFilterList
 } from 'react-icons/md';
 import { TbAlertTriangle } from 'react-icons/tb';
 import { FiSettings } from 'react-icons/fi';
@@ -19,11 +19,30 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('dashboard');
   const [user, setUser] = useState({ nombre: 'Usuario', rol: 'usuario' });
+  const [alertaCount, setAlertaCount] = useState(0);
+  const [usuarios, setUsuarios] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState('');
 
   useEffect(() => {
     const stored = localStorage.getItem('user');
     if (stored) setUser(JSON.parse(stored));
   }, []);
+
+  const isAdmin = user?.rol === 'admin';
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    axios.get('/api/usuarios').then(r => setUsuarios(r.data)).catch(() => {});
+  }, [isAdmin]);
+
+  useEffect(() => {
+    const params = selectedUserId ? `?id_usuario=${selectedUserId}` : '';
+    axios.get(`/api/alertas${params}`).then(r => setAlertaCount(r.data.length)).catch(() => {});
+    const interval = setInterval(() => {
+      axios.get(`/api/alertas${params}`).then(r => setAlertaCount(r.data.length)).catch(() => {});
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [selectedUserId]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -35,7 +54,7 @@ const Dashboard = () => {
     { key: 'dashboard', label: 'Dashboard', icon: <MdDashboard /> },
     { key: 'unidades', label: 'Unidades', icon: <MdOutlineAgriculture /> },
     { key: 'sensores', label: 'Sensores', icon: <MdSensors /> },
-    { key: 'alertas', label: 'Alertas', icon: <TbAlertTriangle />, badge: 3 },
+    { key: 'alertas', label: 'Alertas', icon: <TbAlertTriangle />, badge: alertaCount },
     { key: 'usuarios', label: 'Usuarios', icon: <MdPeople /> },
     { key: 'notificaciones', label: 'Notificaciones', icon: <MdOutlineNotifications /> },
   ];
@@ -91,19 +110,36 @@ const Dashboard = () => {
 
       <main className="mainContent">
         <TopBar user={user} />
+        {isAdmin && (
+          <div className="filterBar">
+            <MdFilterList className="filterIcon" />
+            <select
+              className="userFilter"
+              value={selectedUserId}
+              onChange={e => setSelectedUserId(e.target.value)}
+            >
+              <option value="">Todos los usuarios</option>
+              {usuarios.map(u => (
+                <option key={u.id} value={u.id}>
+                  {u.nombre} ({u.email})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
         <motion.div key={activeSection} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
           {activeSection === 'dashboard' && (
             <>
-              <StatsCards />
+              <StatsCards selectedUserId={selectedUserId} />
               <div className="dashboardGrid">
                 <div className="dashCard">
                   <div className="cardHeader">
                     <h3><MdSensors style={{ marginRight: 6 }} /> Mapa de Sensores</h3>
                     <span className="cardAction">Ver todos →</span>
                   </div>
-                  <MapView />
+                  <MapView selectedUserId={selectedUserId} />
                 </div>
-                <AlertsPanel />
+                <AlertsPanel selectedUserId={selectedUserId} />
               </div>
               <div className="dashboardGrid2">
                 <div className="dashCard">
@@ -113,13 +149,13 @@ const Dashboard = () => {
                   </div>
                   <ChartsPanel />
                 </div>
-                <UnitsPanel />
+                <UnitsPanel selectedUserId={selectedUserId} />
               </div>
             </>
           )}
-          {activeSection === 'unidades' && <UnitsPanel full />}
-          {activeSection === 'sensores' && <StatsCards />}
-          {activeSection === 'alertas' && <AlertsPanel full />}
+          {activeSection === 'unidades' && <UnitsPanel full selectedUserId={selectedUserId} />}
+          {activeSection === 'sensores' && <StatsCards selectedUserId={selectedUserId} />}
+          {activeSection === 'alertas' && <AlertsPanel full selectedUserId={selectedUserId} />}
           {activeSection === 'usuarios' && <div className="dashCard" style={{ padding: '2rem', textAlign: 'center' }}><h2>Gestión de Usuarios</h2><p style={{ color: 'var(--text-light)', marginTop: 8 }}>Módulo en desarrollo</p></div>}
           {activeSection === 'notificaciones' && <div className="dashCard" style={{ padding: '2rem', textAlign: 'center' }}><h2>Notificaciones</h2><p style={{ color: 'var(--text-light)', marginTop: 8 }}>Módulo en desarrollo</p></div>}
         </motion.div>

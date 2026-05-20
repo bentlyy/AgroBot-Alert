@@ -9,6 +9,8 @@ const UNITS = [
   { id: 1003, name: 'Estación Norte', lat: -33.400000, lng: -70.700000 },
   { id: 1004, name: 'Tractor 02 - Este', lat: -33.480000, lng: -70.580000 },
   { id: 1005, name: 'Estación Oeste', lat: -33.520000, lng: -70.720000 },
+  { id: 1006, name: 'Sector Viñedo', lat: -33.440000, lng: -70.670000 },
+  { id: 1007, name: 'Sector Bosque', lat: -33.410000, lng: -70.630000 },
 ];
 
 function randomBetween(min, max) {
@@ -17,14 +19,14 @@ function randomBetween(min, max) {
 
 function generateSensorData() {
   return {
-    user_2u_1: randomBetween(15, 40),   // Temperature_S1
-    user_2u_2: randomBetween(14, 39),   // Temperature_S2
-    user_2u_3: randomBetween(20, 95),   // Humidity_S1
+    user_2u_1: randomBetween(0, 45),    // Temperature_S1 (0-45°C triggers both alta >35 y baja <5)
+    user_2u_2: randomBetween(0, 44),    // Temperature_S2
+    user_2u_3: randomBetween(20, 95),   // Humidity_S1 (20-95% triggers both <30 y >90)
     user_2u_4: randomBetween(20, 95),   // Humidity_S2
     user_2u_5: randomBetween(0.5, 2.5), // Electroconductivity_S1
     user_2u_6: randomBetween(0.5, 2.5), // Electroconductivity_S2
-    pwr_int: randomBetween(2.0, 5.0),   // GPS_Energy
-    pwr_ext: randomBetween(3.0, 5.0),   // External_Energy
+    pwr_int: randomBetween(5, 100),     // GPS_Energy (0-100% triggers <20)
+    pwr_ext: randomBetween(5, 100),     // External_Energy
   };
 }
 

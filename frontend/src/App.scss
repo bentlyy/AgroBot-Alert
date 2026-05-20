@@ -544,6 +544,40 @@ input, button, textarea { font-family: inherit; }
   color: var(--text-light);
 }
 
+/* Filter Bar */
+.filterBar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 1rem;
+  background: var(--card-bg, rgba(255,255,255,0.05));
+  border-radius: var(--radius-md, 12px);
+  border: 1px solid var(--border-color, rgba(255,255,255,0.08));
+}
+.filterIcon {
+  font-size: 1.2rem;
+  color: var(--text-light, #94a3b8);
+}
+.userFilter {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, rgba(255,255,255,0.12));
+  background: rgba(255,255,255,0.06);
+  color: var(--text-color, #e2e8f0);
+  font-size: 0.875rem;
+  cursor: pointer;
+  outline: none;
+}
+.userFilter:focus {
+  border-color: var(--primary, #3b82f6);
+}
+.userFilter option {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
 /* Dashboard Grid */
 .dashboardGrid {
   display: grid;

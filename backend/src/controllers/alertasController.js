@@ -3,6 +3,7 @@ const AlertasModel = require('../models/alertasModel');
 const alertasController = {};
 
 alertasController.getAll = (req, res) => {
+  const idUsuario = req.query.id_usuario || null;
   AlertasModel.getAll((err, results) => {
     if (err) {
       console.log(err);
@@ -10,7 +11,7 @@ alertasController.getAll = (req, res) => {
       return;
     }
     res.json(results);
-  });
+  }, idUsuario);
 };
 
 alertasController.create = (req, res) => {

@@ -3,13 +3,14 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import { MdSensors, MdArrowForward } from 'react-icons/md';
 
-const UnitsPanel = ({ full }) => {
+const UnitsPanel = ({ full, selectedUserId }) => {
   const [unidades, setUnidades] = useState([]);
   const [sensores, setSensores] = useState({});
   const [selectedUnit, setSelectedUnit] = useState(null);
 
   useEffect(() => {
-    axios.get('/api/unidades').then(res => setUnidades(res.data)).catch(() => {});
+    const params = selectedUserId ? `?id_usuario=${selectedUserId}` : '';
+    axios.get(`/api/unidades${params}`).then(res => setUnidades(res.data)).catch(() => {});
     axios.get('/api/sensores').then(res => {
       const map = {};
       res.data.forEach(s => {
@@ -18,7 +19,7 @@ const UnitsPanel = ({ full }) => {
       });
       setSensores(map);
     }).catch(() => {});
-  }, []);
+  }, [selectedUserId]);
 
   const getStatus = (id) => {
     const sens = sensores[id];

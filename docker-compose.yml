@@ -36,6 +36,13 @@ services:
       USE_MOCK_API: "true"
       JWT_SECRET: agrobot_dev_secret_change_in_production
       FRONTEND_URL: http://localhost:5173
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:-}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:-}
+      TWILIO_WHATSAPP_FROM: ${TWILIO_WHATSAPP_FROM:-14155238886}
+      TWILIO_WHATSAPP_TO: ${TWILIO_WHATSAPP_TO:-}
+      EMAIL_USER: ${EMAIL_USER:-amgdevelpments@gmail.com}
+      EMAIL_PASS: "${EMAIL_PASS:-}"
+      ALERT_EMAIL_TO: ${ALERT_EMAIL_TO:-}
     depends_on:
       mysql:
         condition: service_healthy
