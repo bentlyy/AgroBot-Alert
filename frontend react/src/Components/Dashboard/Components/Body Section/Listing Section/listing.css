@@ -1,0 +1,140 @@
+:root {
+  --primaryColor: #3498db;
+  --hoverColor: #2ecc71;
+  --paleGreen: hsl(96, 75%, 89%);
+  --whiteColor: hsl(0, 0%, 100%);
+  --blackColor: hsl(0, 0%, 18%);
+  --greyText: hsl(0, 0%, 75%);
+  --bgColor: hsl(113, 11%, 85%);
+  --inputColor: hsl(330, 12%, 97%);
+  --shadowColor: rgba(0, 0, 0, 0.1);
+  --biggestFontSize: 2.5rem;
+  --h1FontSize: 1.5rem;
+  --h2FontSize: 1rem;
+  --h3FontSize: 2rem;
+  --normalFontSize: .938rem;
+  --smallFontSize: .813rem;
+  --smallestFontSize: .75rem;
+  --itemCardColor: hsl(120, 5%, 88%);
+  --itemCardHoverr: hsl(320, 27%, 88%);
+}
+
+.listingSection {
+  flex-basis: 70%;
+}
+.listingSection .heading {
+  width: 100%;
+  justify-content: space-between;
+}
+.listingSection .heading h1 {
+  font-size: var(--h2FontSize);
+  color: var(--blackColor);
+  font-weight: 700;
+}
+.listingSection .heading .btn {
+  border: 1px solid transparent;
+  font-weight: 500;
+}
+.listingSection .heading .btn:hover {
+  border: 1px solid var(--primaryColor);
+}
+.listingSection .secContainer {
+  width: 100%;
+  margin: 1rem 0;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.listingSection .secContainer .singleItem {
+  position: relative;
+  width: 150px;
+  height: 170px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 1rem;
+  border-radius: 10px;
+  background: var(--itemCardColor);
+}
+.listingSection .secContainer .singleItem:hover {
+  background: var(--itemCardHoverr);
+  box-shadow: 0 2px 2px var(--inputColor);
+}
+.listingSection .secContainer .singleItem img {
+  max-width: 100px;
+}
+.listingSection .secContainer .singleItem .icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: var(--primaryColor);
+}
+.listingSection .secContainer .singleItem h3 {
+  font-size: var(--h3FontSize);
+  color: var(--blackColor);
+  padding: 1rem 0;
+}
+.listingSection .sellers {
+  width: 100%;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.listingSection .sellers .topSellers .heading {
+  padding: 1rem 0;
+}
+.listingSection .sellers .topSellers .heading .btn {
+  padding: 0.5rem 1rem;
+}
+.listingSection .sellers .topSellers .card {
+  padding: 1rem;
+  border-radius: 1rem;
+  background: var(--whiteColor);
+  gap: 1rem;
+  box-shadow: 0 2px 4px var(--inputColor);
+}
+.listingSection .sellers .topSellers .card .users {
+  padding-right: 1rem;
+  border-right: 2px solid var(--greyText);
+}
+.listingSection .sellers .topSellers .card .users img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border: 2px solid var(--inputColor);
+  transition: 0.5s ease;
+}
+.listingSection .sellers .topSellers .card .users img:hover {
+  transform: translateY(-10px);
+}
+.listingSection .sellers .topSellers .card .cardText span {
+  color: var(--blackColor);
+  font-weight: 500;
+}
+.listingSection .sellers .topSellers .card .cardText span small {
+  font-weight: 400;
+}
+.listingSection .sellers .topSellers .card .cardText span small .date {
+  margin-left: 1rem;
+}
+
+@media screen and (max-width: 990px) {
+  .listingSection .sellers .card {
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 918px) {
+  .listingSection .singleItem {
+    width: 200px !important;
+  }
+}
+@media screen and (max-width: 490px) {
+  .listingSection .sellers {
+    flex-direction: column;
+  }
+  .listingSection .sellers .card {
+    flex-direction: column;
+  }
+}/*# sourceMappingURL=listing.css.map */

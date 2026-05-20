@@ -1,0 +1,193 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
+* {
+  padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  transition: 0.3 ease;
+}
+
+:root {
+  --primaryColor: #3498db;
+  --hoverColor: #2ecc71;
+  --paleGreen: hsl(96, 75%, 89%);
+  --whiteColor: hsl(0, 0%, 100%);
+  --blackColor: hsl(0, 0%, 18%);
+  --greyText: hsl(0, 0%, 75%);
+  --bgColor: hsl(113, 11%, 85%);
+  --inputColor: hsl(330, 12%, 97%);
+  --shadowColor: rgba(0, 0, 0, 0.1);
+  --biggestFontSize: 2.5rem;
+  --h1FontSize: 1.5rem;
+  --h2FontSize: 1rem;
+  --h3FontSize: 2rem;
+  --normalFontSize: .938rem;
+  --smallFontSize: .813rem;
+  --smallestFontSize: .75rem;
+}
+
+.sidebar {
+  background-color: var(--whiteColor);
+  box-shadow: 1px 0px 4px var(--greyText);
+  max-width: 18px;
+  height: 100%;
+  gap: 3rem;
+  overflow: auto;
+}
+.sidebar .logoDiv {
+  padding: 1.5rem 1.5rem 0;
+  cursor: pointer;
+}
+.sidebar .logoDiv img {
+  max-width: 20px;
+  margin-right: 0.5rem;
+  background: var(--inputColor);
+  border-radius: 2px;
+  padding: 0.2rem;
+}
+.sidebar .logoDiv h2 {
+  font-size: var(--h2FontSize);
+  color: var(--primaryColor);
+}
+.sidebar .menuDiv .divTitle, .sidebar .settingsDiv .divTitle {
+  font-size: var(--h3FontSize);
+  color: var(--blackColor);
+  padding: 0 1.5rem 1.5rem;
+}
+.sidebar .menuDiv .menuLists .listItem, .sidebar .settingsDiv .menuLists .listItem {
+  padding: 0.2rem 1.5rem;
+  width: 100%;
+  position: relative;
+}
+.sidebar .menuDiv .menuLists .listItem::before, .sidebar .settingsDiv .menuLists .listItem::before {
+  position: absolute;
+  content: "";
+  height: 8%;
+  left: 0;
+  width: 5px;
+  bottom: 0;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background: var(--primaryColor);
+}
+.sidebar .menuDiv .menuLists .listItem .menuLink, .sidebar .settingsDiv .menuLists .listItem .menuLink {
+  color: var(--greyText);
+  font-weight: 500;
+}
+.sidebar .menuDiv .menuLists .listItem .menuLink .icon, .sidebar .settingsDiv .menuLists .listItem .menuLink .icon {
+  margin-right: 0.5rem;
+}
+.sidebar .menuDiv .menuLists .listItem:hover .menuLink, .sidebar .settingsDiv .menuLists .listItem:hover .menuLink {
+  color: var(--primaryColor);
+  transition: 0;
+}
+.sidebar .menuDiv .menuLists .listItem:hover::before, .sidebar .settingsDiv .menuLists .listItem:hover::before {
+  height: 100%;
+  transition: 0.3s ease;
+}
+.sidebar .sideBarCard {
+  width: 100%;
+  padding: 1rem;
+  text-align: center;
+  position: relative;
+}
+.sidebar .sideBarCard .icon {
+  position: absolute;
+  background: var(--hoverColor);
+  border: 10px solid var(--whiteColor);
+  font-size: 3rem;
+  border-radius: 50%;
+  top: -8px;
+  right: 50px;
+  transform: translate(50%);
+  z-index: 100;
+}
+.sidebar .sideBarCard .cardContent {
+  position: relative;
+  padding: 1rem;
+  background: var(--hoverColor);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.sidebar .sideBarCard h3 {
+  font-size: var(--h3FontSize);
+  margin-top: 1rem;
+  padding: 1rem 0;
+  font-weight: 800;
+  color: var(--blackColor);
+}
+.sidebar .sideBarCard p {
+  font-size: var(--normalFontSize);
+  color: var(--greyText);
+  padding-bottom: 1rem;
+  font-weight: 500;
+}
+.sidebar .sideBarCard .btn {
+  position: relative;
+  color: var(--greyText);
+  z-index: 1000;
+}
+.sidebar .sideBarCard .circle1, .sidebar .sideBarCard .circle2 {
+  position: absolute;
+  background: var(--paleGreen);
+  border-radius: 50%;
+  opacity: 0.7;
+}
+.sidebar .sideBarCard .circle1 {
+  height: 100px;
+  width: 100px;
+  top: -50px;
+  left: -50px;
+}
+.sidebar .sideBarCard .circle2 {
+  height: 150px;
+  width: 150px;
+  bottom: -80px;
+  right: -70px;
+  z-index: 1;
+}
+
+@media screen and (max-width: 820px) {
+  .sidebar {
+    padding-bottom: 2rem;
+  }
+  .sidebar .sideBarCard {
+    display: none !important;
+  }
+}
+@media screen and (max-width: 745px) {
+  .sidebar .logoDiv {
+    text-align: center;
+    margin: auto;
+    padding: 1.5rem 0.5rem 0;
+  }
+  .sidebar .logoDiv img {
+    max-width: 50px;
+    margin: 0;
+    border-radius: 10px;
+    padding: 0.5rem;
+  }
+  .sidebar .logoDiv h2 {
+    display: none;
+  }
+  .sidebar .menuDiv .divTitle, .sidebar .menuDiv .smallText, .sidebar .settingsDiv .divTitle, .sidebar .settingsDiv .smallText {
+    display: none;
+  }
+  .sidebar .menuDiv .menuLists .listItem .menuLink, .sidebar .settingsDiv .menuLists .listItem .menuLink {
+    justify-content: center;
+  }
+  .sidebar .menuDiv .menuLists .listItem .menuLink .icon, .sidebar .settingsDiv .menuLists .listItem .menuLink .icon {
+    font-size: var(--h2FontSize);
+  }
+  .divTitle, .smallText {
+    display: none;
+  }
+}
+@media screen and (max-width: px) {
+  .sidebar .menuDiv .menuLists .listItem, .sidebar .settingsDiv .menuLists .listItem {
+    padding: 0.2rem 0.5rem;
+  }
+  .sidebar .menuDiv .menuLists .listItem .menuLink, .sidebar .settingsDiv .menuLists .listItem .menuLink {
+    justify-content: center;
+  }
+}/*# sourceMappingURL=sidebar.css.map */
