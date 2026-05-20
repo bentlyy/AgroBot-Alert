@@ -1,0 +1,33 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const UsuariosModel = require('../models/usuariosModel');
+
+class LoginController {
+  async login(req, res) {
+    const { LoginNombre, LoginContrasena } = req.body;
+    try {
+      const usuario = await UsuariosModel.findUserByEmail(LoginNombre);
+      if (usuario.length === 0) {
+        res.status(401).send({ message: 'Las credenciales no coinciden' });
+        return;
+      }
+
+      const validPassword = await bcrypt.compare(LoginContrasena, usuario[0].contrasena);
+      if (validPassword) {
+        const token = jwt.sign(
+          { id: usuario[0].id, nombre: usuario[0].nombre },
+          process.env.JWT_SECRET || 'your_secret_key',
+          { expiresIn: '24h' }
+        );
+        res.send({ token, usuario: { id: usuario[0].id, nombre: usuario[0].nombre, rol: usuario[0].rol } });
+      } else {
+        res.status(401).send({ message: 'Las credenciales no coinciden' });
+      }
+    } catch (err) {
+      console.error('Error iniciando sesión:', err);
+      res.status(500).send({ message: 'Error iniciando sesión' });
+    }
+  }
+}
+
+module.exports = new LoginController();

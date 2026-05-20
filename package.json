@@ -1,0 +1,19 @@
+{
+    "name": "agrobot-alert",
+    "version": "2.0.0",
+    "private": true,
+    "description": "Sistema web para obtención, almacenamiento, análisis y notificación de datos de Wialon",
+    "scripts": {
+        "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+        "dev:backend": "cd backend && npm run dev",
+        "dev:frontend": "cd frontend && npm run dev",
+        "build": "cd frontend && npm run build",
+        "start": "cd backend && npm start",
+        "seed": "set NODE_PATH=backend\\node_modules && node database\\seed.js",
+        "schema": "echo 'Ejecuta: mysql -u root -p agro5 < database/schema.sql'",
+        "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+    },
+    "devDependencies": {
+        "concurrently": "^9.1.2"
+    }
+}
