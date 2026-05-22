@@ -3,9 +3,9 @@ const fs = require('fs');
 const logToFile = require('./logToFile');
 
 async function makeHttpRequest(url, params) {
-  params.sid = process.env.API_TOKEN;
+  const mergedParams = { ...params, sid: process.env.API_TOKEN };
   try {
-    const response = await axios.get(url, { params });
+    const response = await axios.get(url, { params: mergedParams });
     return response.data;
   } catch (error) {
     logToFile('Error:' + error);

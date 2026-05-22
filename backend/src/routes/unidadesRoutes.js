@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const UnidadesController = require('../controllers/unidadesController');
-const pool = require('../utils/dbConnection');
+const { authMiddleware } = require('../utils/authMiddleware');
 
 const unidadesController = new UnidadesController();
 
-router.get('/', async (req, res, next) => {
+router.get('/', authMiddleware, async (req, res, next) => {
   try {
-    const idUsuario = req.query.id_usuario || null;
+    const isAdmin = req.user && req.user.rol === 'admin';
+    const idUsuario = isAdmin ? (req.query.id_usuario || null) : req.user.id;
     const unidades = await unidadesController.obtenerTodasLasUnidades(idUsuario);
     res.json(unidades);
   } catch (error) {

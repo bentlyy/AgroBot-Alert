@@ -11,7 +11,7 @@ class User {
   }
 
   static async findByEmail(email) {
-    const SQL = 'SELECT * FROM users WHERE email = ?';
+    const SQL = 'SELECT * FROM usuarios WHERE email = ?';
     return new Promise((resolve, reject) => {
       pool.query(SQL, [email], (err, results) => {
         if (err) {
@@ -25,7 +25,7 @@ class User {
   }
 
   async save() {
-    const SQL = 'UPDATE users SET resetPasswordToken = ?, resetPasswordExpires = ? WHERE email = ?';
+    const SQL = 'UPDATE usuarios SET resetPasswordToken = ?, resetPasswordExpires = ? WHERE email = ?';
     return new Promise((resolve, reject) => {
       pool.query(SQL, [this.resetPasswordToken, this.resetPasswordExpires, this.email], (err, results) => {
         if (err) {

@@ -59,14 +59,18 @@ Este proyecto resuelve un problema real: los agricultores no pueden estar revisa
 ## Características
 
 - **Dashboard en tiempo real** con estadísticas, mapa de sensores, gráficos de temperatura/humedad y panel de alertas
-- **Motor de alertas automático** que evalúa datos de sensores contra criterios configurables cada 60 segundos
+- **Motor de alertas manual o automático** — admin puede generar alertas bajo demanda o configurar evaluación periódica
 - **Prevención de duplicados** — no genera la misma alerta repetidamente (ventana de 15 min)
 - **Mock API** — modo desarrollo con datos simulados realistas sin conexión a Wialon
 - **Mapa interactivo** con marcadores Leaflet mostrando ubicación de cada unidad
 - **Gráficos históricos** de temperatura y humedad con Recharts
 - **Autenticación** — registro, login y recuperación de contraseña
+- **JWT Middleware global** — todos los endpoints protegidos con autenticación y verificación de token
+- **Rate Limiting** — límite global de 600 req/15 min y 10 req/min para endpoints de autenticación
+- **Roles y permisos** — admin ve todas las unidades/alertas y puede filtrar por usuario; usuario ve solo las suyas
 - **Notificaciones multicanal** — alertas por email (Nodemailer) y WhatsApp (Twilio) al usuario propietario
-- **Vista por roles** — admin ve todas las alertas con quién está asignado; usuario ve solo las suyas
+- **Panel de estado de notificaciones** — vista en dashoard que muestra si Twilio y Email están configurados
+- **Filtro por usuario (admin)** — select en dashboard para ver datos de un usuario específico
 - **Arquitectura modular** con controladores, modelos y rutas separados
 - **Totalmente dockerizado** — despliegue con un solo comando
 
@@ -119,7 +123,7 @@ Flujo interno del backend:
 
 ### Motor de Alertas (`alertEngine.js`)
 
-El motor se ejecuta en un bucle cada 60 segundos:
+El motor se ejecuta bajo demanda desde el dashboard (admin) — botón **"Generar Alertas"** — o directamente vía `POST /api/alertas/generar`:
 
 1. **Refresca datos** — obtiene la última lectura de cada unidad desde Wialon y la guarda como nuevo registro en `sensores`
 2. **Evalúa criterios** — para cada sensor, compara sus campos contra todos los criterios configurados en `criterios`
@@ -129,6 +133,7 @@ El motor se ejecuta en un bucle cada 60 segundos:
    - *Batería* → `gps_energia`, `energia_externa`
 4. **Filtra duplicados** — no crea una alerta si ya existe otra del mismo tipo para la misma unidad en los últimos 15 minutos
 5. **Registra alerta** — inserta en `alertas` con mensaje descriptivo, tipo (crítico/advertencia) y referencias a unidad y criterio
+6. **Notifica** — envía email y/o WhatsApp al usuario propietario de la unidad
 
 ### Sistema de Notificaciones (`notificacionService.js`)
 
@@ -141,10 +146,10 @@ Cuando el motor crea una alerta, **identifica al usuario propietario** de la uni
 
 ### Administrador vs Usuario
 
-| Rol | Unidades | Alertas visibles | Notificaciones |
-|-----|----------|-----------------|----------------|
-| **admin** | Ninguna asignada | Todas (ve todas las alertas + usuario asignado) | No recibe (sin teléfono/email propio) |
-| **usuario** | Sus unidades asignadas | Solo las de sus unidades | Recibe en su email y WhatsApp |
+| Rol | Unidades | Alertas visibles | Acciones extra | Notificaciones |
+|-----|----------|-----------------|----------------|----------------|
+| **admin** | Ninguna asignada | Todas (con filtro por usuario) | Generar alertas, ver usuarios, estado notificaciones | No recibe (sin teléfono/email propio) |
+| **usuario** | Sus unidades asignadas | Solo las de sus unidades | — | Recibe en su email y WhatsApp |
 
 Ambos canales son **opcionales**: si el usuario no tiene email o teléfono configurado, el sistema omite el envío sin errores.
 
@@ -256,7 +261,9 @@ curl http://localhost:3000/api/alertas
 
 ## API REST
 
-### Autenticación
+> Todos los endpoints (excepto auth) requieren header `Authorization: Bearer <token>`.
+
+### Autenticación (rate limited: 10 req/min)
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
@@ -264,20 +271,23 @@ curl http://localhost:3000/api/alertas
 | POST | `/api/auth/register` | Registrar usuario |
 | POST | `/api/auth/solicitar-recuperacion` | Solicitar recuperación de contraseña |
 
-### Datos
+### Datos (rate limited: 600 req/15 min)
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| GET | `/api/alertas` | Listar todas las alertas (ordenadas por fecha DESC) |
+| GET | `/api/alertas` | Listar alertas (filtra por `?id_usuario=` para admin) |
 | POST | `/api/alertas` | Crear alerta manualmente |
+| POST | `/api/alertas/generar` | Generar alertas desde sensores (solo admin) |
+| GET | `/api/alertas/notificaciones/estado` | Estado de configuración de Twilio y Email |
 | GET | `/api/criterios` | Listar criterios de alerta |
 | GET | `/api/sensores` | Listar sensores con sus últimas lecturas |
-| GET | `/api/unidades` | Listar unidades de monitoreo |
-| GET | `/api/usuarios` | Listar usuarios |
+| GET | `/api/unidades` | Listar unidades (filtra por `?id_usuario=` para admin) |
+| GET | `/api/usuarios` | Listar usuarios (solo admin) |
 | GET | `/api/campos` | Listar campos agrícolas |
 | GET | `/api/mapa` | Datos para el mapa |
-| GET | `/api/mediciones/sensor/:id` | Mediciones históricas por sensor |
-| GET | `/api/mediciones/unidad/:id` | Mediciones históricas por unidad |
+| GET | `/api/mediciones/sensor/:id_sensor` | Mediciones históricas por sensor |
+| GET | `/api/mediciones/sensor/:id_sensor/ultima` | Última medición de un sensor |
+| GET | `/api/mediciones/unidad/:id_unidad` | Mediciones históricas por unidad |
 
 ---
 
@@ -285,6 +295,7 @@ curl http://localhost:3000/api/alertas
 
 ```
 agrobot-alert/
+├── .dockerignore               # Archivos ignorados por Docker
 ├── docker-compose.yml          # Orquestación MySQL + Backend + Frontend
 ├── AGENTS.md                   # Documentación técnica del desarrollador
 ├── database/
@@ -302,11 +313,13 @@ agrobot-alert/
 │       ├── models/             # Modelos (queries a la BD)
 │       ├── routes/             # Definición de rutas Express
 │       └── utils/              # Utilidades:
+│           ├── authMiddleware.js# JWT + verificación de roles
+│           ├── rateLimiter.js  # Rate limiting global y por auth
 │           ├── dbConnection.js # Pool MySQL con retry exponencial
 │           ├── wialonService.js# Adaptador Wialon (real/mock)
 │           ├── wialonMock.js   # Datos simulados para desarrollo
 │           ├── wialonApiUtils.js # API real de Wialon
-│           ├── alertEngine.js  # Motor de alertas automáticas
+│           ├── alertEngine.js  # Motor de alertas (manual/automático)
 │           ├── emailService.js # Servicio de correo
 │           └── logToFile.js    # Logging a archivo
 ├── frontend/
@@ -319,7 +332,7 @@ agrobot-alert/
 │       │   ├── Login/          # Login con glassmorphism
 │       │   ├── Register/       # Registro de usuario
 │       │   ├── RecuperarContrasena/ # Recuperación de contraseña
-│       │   ├── ProtectedRoute/ # Guard de autenticación
+│       │   ├── ProtectedRoute/ # Guard de autenticación + JWT
 │       │   └── Dashboard/
 │       │       ├── Dashboard.jsx # Layout principal + sidebar
 │       │       └── Components/
@@ -328,7 +341,8 @@ agrobot-alert/
 │       │           ├── MapView/    # Mapa Leaflet interactivo
 │       │           ├── ChartsPanel/# Gráficos Recharts
 │       │           ├── AlertsPanel/# Lista de alertas animadas
-│       │           └── UnitsPanel/ # Unidades + modal detalle
+│       │           ├── UnitsPanel/ # Unidades + modal detalle
+│       │           └── NotificacionesStatus/ # Estado Twilio/Email
 │       └── Assets/             # Logo, imágenes, favicon
 ```
 
@@ -337,12 +351,26 @@ agrobot-alert/
 ## Flujo de Alertas
 
 ```
-Sensor Data ──► ¿Excede umbral? ──► ¿Alerta reciente? ──► INSERT alerta
-                     │                      │
-                    No                     Sí
-                     │                      │
-                     ▼                      ▼
-                  OK                    SKIP (duplicado)
+[Admin] Botón "Generar Alertas"
+            │
+            ▼
+  refrescarDatosSensores() ← Wialon/Mock
+            │
+            ▼
+   evaluarAlertas()
+            │
+    ┌───────┴────────┐
+    ▼                ▼
+¿Excede umbral?   ¿Alerta reciente?
+    │                │ (15 min)
+   Sí                Sí
+    │                │
+    ▼                ▼
+INSERT alerta ──► enviarNotificacion()
+                    │
+              ┌─────┴─────┐
+              ▼           ▼
+           Email     WhatsApp
 ```
 
 ### Criterios precargados (seed)
@@ -404,14 +432,12 @@ docker exec agrobot-mysql mysql -uroot -proot123 -e "USE agro5; SHOW TABLES;"
 
 | Variable | Default | Descripción |
 |----------|---------|-------------|
-| Variable | Default | Descripción |
-|----------|---------|-------------|
 | `DB_HOST` | `localhost` | Host de MySQL |
 | `DB_USER` | `root` | Usuario MySQL |
 | `DB_PASSWORD` | `root123` | Contraseña MySQL |
 | `DB_NAME` | `agro5` | Nombre de la base de datos |
 | `USE_MOCK_API` | `true` | Usar datos simulados (`true`) o API real de Wialon (`false`) |
-| `JWT_SECRET` | `secret` | Secreto para firmar tokens JWT |
+| `JWT_SECRET` | `your_secret_key` | Secreto para firmar y verificar tokens JWT |
 | `PORT` | `3000` | Puerto del servidor backend |
 | `FRONTEND_URL` | `http://localhost:5173` | URL del frontend para CORS |
 | `EMAIL_USER` | — | Correo Gmail para envío de emails |
@@ -434,8 +460,13 @@ docker exec agrobot-mysql mysql -uroot -proot123 -e "USE agro5; SHOW TABLES;"
 - [x] Badge dinámico en sidebar
 - [x] Notificaciones por email (Nodemailer)
 - [x] Notificaciones por WhatsApp (Twilio)
+- [x] JWT Auth Middleware en todos los endpoints
+- [x] Rate Limiting global y por auth
+- [x] Roles admin/usuario con filtrado de datos
+- [x] Panel de estado de notificaciones (Twilio/Email)
+- [x] Botón de generación manual de alertas (admin)
+- [x] Filtro por usuario en dashboard (admin)
 - [ ] Historial de alertas con filtros y paginación
-- [ ] Rol de administrador con gestión de usuarios
 - [ ] Panel de configuración de criterios desde UI
 - [ ] Tests automatizados (backend y frontend)
 - [ ] Modo offline / PWA

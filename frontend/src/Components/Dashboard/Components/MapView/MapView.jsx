@@ -37,12 +37,10 @@ const MapView = ({ selectedUserId }) => {
     }).catch(() => {});
   }, [selectedUserId]);
 
+  const defaultCenter = [-33.456, -70.65];
   const center = unidades.length > 0
     ? [parseFloat(unidades[0].latitude), parseFloat(unidades[0].longitude)]
-    : [-33.456, -70.65];
-  const bounds = unidades.length > 0
-    ? unidades.map(u => [parseFloat(u.latitude), parseFloat(u.longitude)])
-    : [center];
+    : defaultCenter;
 
   return (
     <>

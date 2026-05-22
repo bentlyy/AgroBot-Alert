@@ -29,28 +29,18 @@ async function seed() {
   const hashedPassword = await bcrypt.hash('admin123', 10);
 
   // 1. Usuarios
-  await connection.query(`DELETE FROM usuarios WHERE email IN ('admin@agrobot.com', 'garayaa0606@gmail.com')`);
+  await connection.query(`DELETE FROM usuarios WHERE email IN ('admin@agrobot.com', 'garayaa0606@gmail.com', 'demo2@agrobot.com', 'demo3@agrobot.com')`);
   const usuariosRows = [
     ['admin@agrobot.com', 'Administrador', hashedPassword, 'admin', null],
-    ['garayaa0606@gmail.com', 'Usuario Demo', hashedPassword, 'usuario', '+56953818617']
+    ['garayaa0606@gmail.com', 'Usuario Demo', hashedPassword, 'usuario', '+56953818617'],
+    ['demo2@agrobot.com', 'Agricultor Juan', hashedPassword, 'usuario', null],
+    ['demo3@agrobot.com', 'Maria Gonzalez', hashedPassword, 'usuario', null],
   ];
   await connection.query(
     'INSERT INTO usuarios (email, nombre, contrasena, rol, telefono) VALUES ?',
     [usuariosRows]
   );
-  console.log('✓ Usuarios creados (admin) y (garayaa0606@gmail.com / admin123)');
-
-  // 2. Password recovery user
-  await connection.query(`DELETE FROM users WHERE email IN ('admin@agrobot.com', 'garayaa0606@gmail.com')`);
-  await connection.query(
-    'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
-    ['Administrador', 'admin@agrobot.com', hashedPassword]
-  );
-  await connection.query(
-    'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
-    ['Usuario Demo', 'garayaa0606@gmail.com', hashedPassword]
-  );
-  console.log('✓ Tabla users poblada');
+  console.log('✓ 4 usuarios creados (admin, demo, Agricultor Juan, Maria Gonzalez)');
 
   // 3. Unidades
   await connection.query('DELETE FROM unidades WHERE id_unidad >= 1000');
@@ -60,6 +50,8 @@ async function seed() {
     [1003, 'Estacion Norte',      2, -33.4000000, -70.7000000],
     [1004, 'Tractor 02 - Este',   2, -33.4800000, -70.5800000],
     [1005, 'Estacion Oeste',      2, -33.5200000, -70.7200000],
+    [1006, 'Sector Vinedo',       3, -33.4400000, -70.6700000],
+    [1007, 'Sector Bosque',       4, -33.4100000, -70.6300000],
   ];
   await connection.query(
     'INSERT INTO unidades (id_unidad, nombre, id_usuario, latitude, longitude) VALUES ?',
@@ -73,9 +65,11 @@ async function seed() {
     [1001, 'Sensor T-H Central',    25.3, 24.8, 65.2, 63.1, 1.2, 1.3, 4.8, 5.0],
     [1001, 'Sensor EC Central',     26.1, 25.4, 64.0, 62.5, 1.5, 1.6, 4.7, 5.0],
     [1002, 'Sensor Tractor Sur',    32.7, 31.9, 45.0, 43.2, 0.8, 0.9, 3.2, 4.1],
-    [1003, 'Sensor Estación Norte', 18.5, 17.9, 78.3, 76.8, 1.0, 1.1, 4.9, 5.0],
+    [1003, 'Sensor Estacion Norte', 18.5, 17.9, 78.3, 76.8, 1.0, 1.1, 4.9, 5.0],
     [1004, 'Sensor Tractor Este',   29.4, 28.7, 52.1, 50.3, 0.7, 0.8, 3.5, 4.3],
-    [1005, 'Sensor Estación Oeste', 21.2, 20.6, 71.5, 70.0, 1.1, 1.2, 4.6, 5.0],
+    [1005, 'Sensor Estacion Oeste', 21.2, 20.6, 71.5, 70.0, 1.1, 1.2, 4.6, 5.0],
+    [1006, 'Sensor Vinedo',         22.8, 22.1, 55.3, 53.8, 1.3, 1.4, 4.2, 4.8],
+    [1007, 'Sensor Bosque',         19.5, 19.0, 72.1, 70.5, 0.9, 1.0, 4.5, 4.9],
   ];
   await connection.query(
     `INSERT INTO sensores (id_unidad, nombre, temperatura_s1, temperatura_s2,
