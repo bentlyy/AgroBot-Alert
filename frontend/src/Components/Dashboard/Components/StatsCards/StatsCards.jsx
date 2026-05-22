@@ -41,10 +41,10 @@ const StatsCards = ({ selectedUserId }) => {
   }, [fetchStats]);
 
   const cards = [
-    { key: 'unidades', label: 'Unidades', value: stats.unidades, trend: '+2', trendDir: 'up' },
-    { key: 'sensores', label: 'Sensores', value: stats.sensores, trend: '+6', trendDir: 'up' },
-    { key: 'alertas', label: 'Alertas', value: stats.alertas, trend: '+3', trendDir: 'up' },
-    { key: 'usuarios', label: 'Usuarios', value: stats.usuarios, trend: '+1', trendDir: 'up' },
+    { key: 'unidades', label: 'Unidades', value: stats.unidades },
+    { key: 'sensores', label: 'Sensores', value: stats.sensores },
+    { key: 'alertas', label: 'Alertas', value: stats.alertas },
+    { key: 'usuarios', label: 'Usuarios', value: stats.usuarios },
   ];
 
   return (
@@ -59,7 +59,6 @@ const StatsCards = ({ selectedUserId }) => {
         >
           <div className="statHeader">
             <div className={`statIcon ${iconColorMap[card.key]}`}>{iconMap[card.key]}</div>
-            <span className={`trend ${card.trendDir}`}>{card.trend}</span>
           </div>
           <h2>{card.value}</h2>
           <p>{card.label}</p>

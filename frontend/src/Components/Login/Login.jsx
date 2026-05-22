@@ -23,6 +23,7 @@ const Login = () => {
       });
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.usuario));
+      axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Error al iniciar sesión');

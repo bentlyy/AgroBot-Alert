@@ -13,14 +13,9 @@ USE agro5;
 -- ============================================================
 INSERT INTO usuarios (email, nombre, contrasena, rol, telefono) VALUES
   ('admin@agrobot.com', 'Administrador', '$2b$10$8K1p/a0dL1LXMIgoEDFrwOfMQkfAjkMBcGmF0xP7FGxP/.KJFOxuS', 'admin',   null),
-  ('garayaa0606@gmail.com', 'Usuario Demo', '$2b$10$8K1p/a0dL1LXMIgoEDFrwOfMQkfAjkMBcGmF0xP7FGxP/.KJFOxuS', 'usuario', '+56953818617');
-
--- ============================================================
--- Usuario para recuperación de contraseña
--- ============================================================
-INSERT INTO users (username, email, password) VALUES
-  ('Administrador', 'admin@agrobot.com', '$2b$10$8K1p/a0dL1LXMIgoEDFrwOfMQkfAjkMBcGmF0xP7FGxP/.KJFOxuS'),
-  ('Usuario Demo',  'garayaa0606@gmail.com', '$2b$10$8K1p/a0dL1LXMIgoEDFrwOfMQkfAjkMBcGmF0xP7FGxP/.KJFOxuS');
+  ('garayaa0606@gmail.com', 'Usuario Demo', '$2b$10$8K1p/a0dL1LXMIgoEDFrwOfMQkfAjkMBcGmF0xP7FGxP/.KJFOxuS', 'usuario', '+56953818617'),
+  ('demo2@agrobot.com', 'Agricultor Juan', '$2b$10$8K1p/a0dL1LXMIgoEDFrwOfMQkfAjkMBcGmF0xP7FGxP/.KJFOxuS', 'usuario', null),
+  ('demo3@agrobot.com', 'Maria Gonzalez', '$2b$10$8K1p/a0dL1LXMIgoEDFrwOfMQkfAjkMBcGmF0xP7FGxP/.KJFOxuS', 'usuario', null);
 
 -- ============================================================
 -- Unidades de monitoreo (todas asignadas al usuario demo)

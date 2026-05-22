@@ -46,6 +46,10 @@ input, button, textarea { font-family: inherit; }
 .flex { display: flex; align-items: center; }
 .grid { display: grid; gap: 1.5rem; }
 
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -551,31 +555,38 @@ input, button, textarea { font-family: inherit; }
   gap: 0.75rem;
   margin-bottom: 1.25rem;
   padding: 0.75rem 1rem;
-  background: var(--card-bg, rgba(255,255,255,0.05));
-  border-radius: var(--radius-md, 12px);
-  border: 1px solid var(--border-color, rgba(255,255,255,0.08));
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 .filterIcon {
   font-size: 1.2rem;
-  color: var(--text-light, #94a3b8);
+  color: var(--primary);
 }
 .userFilter {
   flex: 1;
   padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  border: 1px solid var(--border-color, rgba(255,255,255,0.12));
-  background: rgba(255,255,255,0.06);
-  color: var(--text-color, #e2e8f0);
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
   font-size: 0.875rem;
   cursor: pointer;
   outline: none;
+  font-weight: 500;
+  transition: var(--transition);
+}
+.userFilter:hover {
+  border-color: var(--primary-light);
 }
 .userFilter:focus {
-  border-color: var(--primary, #3b82f6);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
 }
 .userFilter option {
-  background: #1e293b;
-  color: #e2e8f0;
+  background: var(--card);
+  color: var(--text);
 }
 
 /* Dashboard Grid */

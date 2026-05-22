@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
   MdDashboard, MdOutlineAgriculture, MdSensors, MdOutlineNotifications,
-  MdPeople, MdLogout, MdWarning, MdMenu, MdFilterList
+  MdPeople, MdLogout, MdWarning, MdMenu, MdFilterList, MdRefresh
 } from 'react-icons/md';
 import { TbAlertTriangle } from 'react-icons/tb';
 import { FiSettings } from 'react-icons/fi';
@@ -14,6 +14,7 @@ import MapView from './Components/MapView/MapView';
 import ChartsPanel from './Components/ChartsPanel/ChartsPanel';
 import AlertsPanel from './Components/AlertsPanel/AlertsPanel';
 import UnitsPanel from './Components/UnitsPanel/UnitsPanel';
+import NotificacionesStatus from './Components/NotificacionesStatus/NotificacionesStatus';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const Dashboard = () => {
   const [alertaCount, setAlertaCount] = useState(0);
   const [usuarios, setUsuarios] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState('');
+  const [generando, setGenerando] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem('user');
@@ -125,6 +127,25 @@ const Dashboard = () => {
                 </option>
               ))}
             </select>
+            <button
+              className="authBtn"
+              style={{ margin: 0, padding: '0.5rem 1rem', width: 'auto', fontSize: '0.85rem' }}
+              disabled={generando}
+              onClick={async () => {
+                setGenerando(true);
+                try {
+                  await axios.post('/api/alertas/generar');
+                  setAlertaCount(prev => prev + 1);
+                } catch (err) {
+                  console.error(err);
+                } finally {
+                  setGenerando(false);
+                }
+              }}
+            >
+              <MdRefresh style={{ marginRight: 6, animation: generando ? 'spin 1s linear infinite' : 'none' }} />
+              {generando ? 'Generando...' : 'Generar Alertas'}
+            </button>
           </div>
         )}
         <motion.div key={activeSection} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
@@ -157,7 +178,7 @@ const Dashboard = () => {
           {activeSection === 'sensores' && <StatsCards selectedUserId={selectedUserId} />}
           {activeSection === 'alertas' && <AlertsPanel full selectedUserId={selectedUserId} />}
           {activeSection === 'usuarios' && <div className="dashCard" style={{ padding: '2rem', textAlign: 'center' }}><h2>Gestión de Usuarios</h2><p style={{ color: 'var(--text-light)', marginTop: 8 }}>Módulo en desarrollo</p></div>}
-          {activeSection === 'notificaciones' && <div className="dashCard" style={{ padding: '2rem', textAlign: 'center' }}><h2>Notificaciones</h2><p style={{ color: 'var(--text-light)', marginTop: 8 }}>Módulo en desarrollo</p></div>}
+          {activeSection === 'notificaciones' && <NotificacionesStatus />}
         </motion.div>
       </main>
     </div>

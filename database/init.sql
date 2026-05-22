@@ -9,27 +9,18 @@ CREATE DATABASE IF NOT EXISTS agro5
 
 USE agro5;
 
--- 1. usuarios
+-- 1. usuarios (incluye recuperación de contraseñas)
 CREATE TABLE IF NOT EXISTS usuarios (
-  id          INT AUTO_INCREMENT PRIMARY KEY,
-  email       VARCHAR(255) NOT NULL UNIQUE,
-  nombre      VARCHAR(100) NOT NULL,
-  contrasena  VARCHAR(255) NOT NULL,
-  rol         VARCHAR(50)  NOT NULL DEFAULT 'usuario',
-  telefono    VARCHAR(20),
-  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
-
--- 2. users (recuperación de contraseñas)
-CREATE TABLE IF NOT EXISTS users (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  username              VARCHAR(100),
   email                 VARCHAR(255) NOT NULL UNIQUE,
-  password              VARCHAR(255),
+  nombre                VARCHAR(100) NOT NULL,
+  contrasena            VARCHAR(255) NOT NULL,
+  rol                   VARCHAR(50)  NOT NULL DEFAULT 'usuario',
+  telefono              VARCHAR(20),
   resetPasswordToken    VARCHAR(255),
   resetPasswordExpires  BIGINT,
-  created_at            TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at            TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
 -- 3. unidades
@@ -59,17 +50,20 @@ CREATE TABLE IF NOT EXISTS sensores (
   energia_externa         DECIMAL(10, 2),
   created_at              TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (id_unidad) REFERENCES unidades(id_unidad)
-    ON DELETE CASCADE ON UPDATE CASCADE
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  INDEX idx_sensores_unidad (id_unidad)
 ) ENGINE=InnoDB;
 
 -- 5. mediciones
 CREATE TABLE IF NOT EXISTS mediciones (
   id          INT AUTO_INCREMENT PRIMARY KEY,
   id_sensor   INT NOT NULL,
-  valor       VARCHAR(255),
+  valor       DECIMAL(10, 2),
   timestamp   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (id_sensor) REFERENCES sensores(id_sensor)
-    ON DELETE CASCADE ON UPDATE CASCADE
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  INDEX idx_mediciones_sensor (id_sensor),
+  INDEX idx_mediciones_timestamp (timestamp)
 ) ENGINE=InnoDB;
 
 -- 6. criterios
@@ -93,7 +87,10 @@ CREATE TABLE IF NOT EXISTS alertas (
   FOREIGN KEY (id_unidad) REFERENCES unidades(id_unidad)
     ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (id_criterio) REFERENCES criterios(id)
-    ON DELETE SET NULL ON UPDATE CASCADE
+    ON DELETE SET NULL ON UPDATE CASCADE,
+  INDEX idx_alertas_unidad (id_unidad),
+  INDEX idx_alertas_criterio (id_criterio),
+  INDEX idx_alertas_fecha (fecha_creacion)
 ) ENGINE=InnoDB;
 
 -- 8. campos
@@ -115,13 +112,6 @@ INSERT INTO usuarios (email, nombre, contrasena, rol, telefono) VALUES
   ('garayaa0606@gmail.com',  'Usuario Demo',    '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u', 'usuario', '+56953818617'),
   ('demo2@agrobot.com',      'Agricultor Juan', '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u', 'usuario', null),
   ('demo3@agrobot.com',      'Maria Gonzalez',  '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u', 'usuario', null);
-
--- Tabla users (recuperación)
-INSERT INTO users (username, email, password) VALUES
-  ('Administrador',   'admin@agrobot.com', '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u'),
-  ('Usuario Demo',    'garayaa0606@gmail.com', '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u'),
-  ('Agricultor Juan', 'demo2@agrobot.com', '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u'),
-  ('Maria Gonzalez',  'demo3@agrobot.com', '$2a$10$CnUgMbgAwP5R8.NL9YKR8u.0GJrC8gTLq6BIe7ixfoQM1ogWROD4u');
 
 -- Unidades (1001-1005 = usuario demo 2, 1006 = Agricultor Juan 3, 1007 = Maria Gonzalez 4)
 INSERT INTO unidades (id_unidad, nombre, id_usuario, latitude, longitude) VALUES

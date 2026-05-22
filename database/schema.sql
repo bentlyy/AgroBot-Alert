@@ -11,31 +11,19 @@ CREATE DATABASE IF NOT EXISTS agro5
 USE agro5;
 
 -- ============================================================
--- 1. usuarios - Usuarios del sistema
+-- 1. usuarios - Usuarios del sistema (incluye recuperación)
 -- ============================================================
 CREATE TABLE IF NOT EXISTS usuarios (
-  id          INT AUTO_INCREMENT PRIMARY KEY,
-  email       VARCHAR(255) NOT NULL UNIQUE,
-  nombre      VARCHAR(100) NOT NULL,
-  contrasena  VARCHAR(255) NOT NULL,
-  rol         VARCHAR(50)  NOT NULL DEFAULT 'usuario',
-  telefono    VARCHAR(20),
-  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
-
--- ============================================================
--- 2. users - Tabla para recuperación de contraseñas
---    (separada de usuarios por diseño original)
--- ============================================================
-CREATE TABLE IF NOT EXISTS users (
   id                    INT AUTO_INCREMENT PRIMARY KEY,
-  username              VARCHAR(100),
   email                 VARCHAR(255) NOT NULL UNIQUE,
-  password              VARCHAR(255),
+  nombre                VARCHAR(100) NOT NULL,
+  contrasena            VARCHAR(255) NOT NULL,
+  rol                   VARCHAR(50)  NOT NULL DEFAULT 'usuario',
+  telefono              VARCHAR(20),
   resetPasswordToken    VARCHAR(255),
   resetPasswordExpires  BIGINT,
-  created_at            TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at            TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
 -- ============================================================
@@ -54,7 +42,6 @@ CREATE TABLE IF NOT EXISTS unidades (
 
 -- ============================================================
 -- 4. sensores - Sensores asociados a unidades
--- ============================================================
 CREATE TABLE IF NOT EXISTS sensores (
   id_sensor               INT AUTO_INCREMENT PRIMARY KEY,
   id_unidad               INT NOT NULL,
@@ -69,19 +56,21 @@ CREATE TABLE IF NOT EXISTS sensores (
   energia_externa         DECIMAL(10, 2),
   created_at              TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (id_unidad) REFERENCES unidades(id_unidad)
-    ON DELETE CASCADE ON UPDATE CASCADE
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  INDEX idx_sensores_unidad (id_unidad)
 ) ENGINE=InnoDB;
 
 -- ============================================================
 -- 5. mediciones - Mediciones históricas de sensores
--- ============================================================
 CREATE TABLE IF NOT EXISTS mediciones (
   id          INT AUTO_INCREMENT PRIMARY KEY,
   id_sensor   INT NOT NULL,
-  valor       VARCHAR(255),
+  valor       DECIMAL(10, 2),
   timestamp   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (id_sensor) REFERENCES sensores(id_sensor)
-    ON DELETE CASCADE ON UPDATE CASCADE
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  INDEX idx_mediciones_sensor (id_sensor),
+  INDEX idx_mediciones_timestamp (timestamp)
 ) ENGINE=InnoDB;
 
 -- ============================================================
@@ -98,7 +87,6 @@ CREATE TABLE IF NOT EXISTS criterios (
 
 -- ============================================================
 -- 7. alertas - Alertas generadas automáticamente
--- ============================================================
 CREATE TABLE IF NOT EXISTS alertas (
   id              INT AUTO_INCREMENT PRIMARY KEY,
   mensaje         TEXT NOT NULL,
@@ -109,7 +97,10 @@ CREATE TABLE IF NOT EXISTS alertas (
   FOREIGN KEY (id_unidad) REFERENCES unidades(id_unidad)
     ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (id_criterio) REFERENCES criterios(id)
-    ON DELETE SET NULL ON UPDATE CASCADE
+    ON DELETE SET NULL ON UPDATE CASCADE,
+  INDEX idx_alertas_unidad (id_unidad),
+  INDEX idx_alertas_criterio (id_criterio),
+  INDEX idx_alertas_fecha (fecha_creacion)
 ) ENGINE=InnoDB;
 
 -- ============================================================

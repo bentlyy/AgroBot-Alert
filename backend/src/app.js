@@ -22,10 +22,21 @@ const SensoresModel = require('./models/sensorModel');
 const pool = require('./utils/dbConnection');
 const wialon = require('./utils/wialonService');
 const alertEngine = require('./utils/alertEngine');
+const { rateLimiter } = require('./utils/rateLimiter');
 
 const app = express();
 
 app.use(cors());
+app.use(rateLimiter);
+
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
+  next();
+});
+
 app.set('port', process.env.PORT || 3000);
 app.use(morgan('dev'));
 app.use(express.json());
@@ -46,6 +57,13 @@ app.use('/api/mediciones', medicionesRoutes);
 app.use('/api/sensores', sensoresRoutes);
 app.use('/api/unidades', unidadesRoutes);
 app.use('/api/usuarios', usuariosRoutes);
+
+app.use((err, req, res, next) => {
+  console.error('[Error]', err.message);
+  res.status(err.status || 500).json({
+    message: err.message || 'Error interno del servidor',
+  });
+});
 
 const unidadesModel = new UnidadesModel(pool);
 const sensoresModel = new SensoresModel(pool);
@@ -94,7 +112,7 @@ async function seedearDesdeWialon() {
 
 pool.ready.then(async () => {
   await seedearDesdeWialon();
-  alertEngine.startAlertEngine();
+  console.log('[AlertEngine] Manual — usa el boton "Generar Alertas" en el Dashboard (admin)');
 });
 
 app.listen(app.get('port'), () => {

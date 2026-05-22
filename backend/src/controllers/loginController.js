@@ -15,7 +15,7 @@ class LoginController {
       const validPassword = await bcrypt.compare(LoginContrasena, usuario[0].contrasena);
       if (validPassword) {
         const token = jwt.sign(
-          { id: usuario[0].id, nombre: usuario[0].nombre },
+          { id: usuario[0].id, nombre: usuario[0].nombre, rol: usuario[0].rol },
           process.env.JWT_SECRET || 'your_secret_key',
           { expiresIn: '24h' }
         );

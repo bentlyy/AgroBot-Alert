@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const SensoresController = require('../controllers/sensoresController');
-const pool = require('../utils/dbConnection');
+const { authMiddleware } = require('../utils/authMiddleware');
 
 const sensoresController = new SensoresController();
 
-router.get('/', async (req, res, next) => {
+router.get('/', authMiddleware, async (req, res, next) => {
   try {
     const sensores = await sensoresController.obtenerTodosLosSensores();
     res.json(sensores);
@@ -14,7 +14,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.post('/', async (req, res, next) => {
+router.post('/', authMiddleware, async (req, res, next) => {
   try {
     await sensoresController.guardarSensoresDeAPI(req.body);
     res.send('Sensores guardados exitosamente!');

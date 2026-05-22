@@ -6,27 +6,65 @@ const COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444'];
 
 const ChartsPanel = () => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('/api/sensores').then(res => {
-      const sensores = res.data.slice(0, 4);
-      const points = [];
-      for (let i = 6; i >= 0; i--) {
-        const ts = new Date(Date.now() - i * 3600000);
-        const point = { time: `${ts.getHours()}:00` };
-        sensores.forEach((s, idx) => {
-          point[`temp_${idx}`] = parseFloat(s.temperatura_s1) + (Math.random() - 0.5) * 4;
-          point[`hum_${idx}`] = parseFloat(s.humedad_s1) + (Math.random() - 0.5) * 8;
-        });
-        points.push(point);
+    Promise.all([
+      axios.get('/api/sensores'),
+      axios.get('/api/mediciones/sensor/1'),
+    ]).then(([sensRes, medRes]) => {
+      const sensores = sensRes.data.slice(0, 4);
+      const mediciones = medRes.data || [];
+
+      if (!mediciones.length || !sensores.length) {
+        setLoading(false);
+        return;
       }
-      setData(points);
-    }).catch(() => {});
+
+      const grouped = {};
+      mediciones.forEach(m => {
+        const key = new Date(m.timestamp).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+        if (!grouped[key]) grouped[key] = { time: key };
+        grouped[key][`temp_0`] = parseFloat(m.valor);
+      });
+
+      sensores.forEach((s, idx) => {
+        Object.keys(grouped).forEach(key => {
+          if (!grouped[key][`temp_${idx}`]) {
+            grouped[key][`temp_${idx}`] = parseFloat(s.temperatura_s1);
+          }
+          if (!grouped[key][`hum_${idx}`]) {
+            grouped[key][`hum_${idx}`] = parseFloat(s.humedad_s1);
+          }
+        });
+      });
+
+      setData(Object.values(grouped).slice(-12));
+      setLoading(false);
+    }).catch(() => {
+      setLoading(false);
+    });
   }, []);
 
   const metrics = data.length > 0
     ? Object.keys(data[0]).filter(k => k.startsWith('temp_'))
     : [];
+
+  if (loading) {
+    return (
+      <div className="chartWrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: 'var(--text-light)' }}>Cargando datos...</p>
+      </div>
+    );
+  }
+
+  if (!data.length) {
+    return (
+      <div className="chartWrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: 'var(--text-light)' }}>Sin datos de mediciones disponibles</p>
+      </div>
+    );
+  }
 
   return (
     <div className="chartWrapper">

@@ -18,9 +18,7 @@ function getFieldsForCriterion(nombre) {
   return [];
 }
 
-const INTERVALO_MS = 60 * 1000;
 const VENTANA_DUPLICADO_MINUTOS = 15;
-let intervaloId = null;
 
 function query(sql, params) {
   return new Promise((resolve, reject) => {
@@ -143,24 +141,12 @@ async function evaluarAlertas() {
   }
 }
 
-async function cicloCompleto() {
+async function generarAlertasAhora() {
+  console.log('[AlertEngine] Generando alertas manualmente...');
   await refrescarDatosSensores();
   await evaluarAlertas();
+  console.log('[AlertEngine] Generacion de alertas completada.');
+  return true;
 }
 
-function startAlertEngine() {
-  if (intervaloId) return;
-  console.log(`[AlertEngine] Iniciando ciclo cada ${INTERVALO_MS / 1000}s`);
-  cicloCompleto();
-  intervaloId = setInterval(cicloCompleto, INTERVALO_MS);
-}
-
-function stopAlertEngine() {
-  if (intervaloId) {
-    clearInterval(intervaloId);
-    intervaloId = null;
-    console.log('[AlertEngine] Detenido');
-  }
-}
-
-module.exports = { startAlertEngine, stopAlertEngine };
+module.exports = { generarAlertasAhora, refrescarDatosSensores, evaluarAlertas };
