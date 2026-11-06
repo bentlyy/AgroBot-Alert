@@ -6,7 +6,7 @@
     <img src="https://img.shields.io/badge/Node.js-18.x-339933?logo=node.js&logoColor=white" alt="Node.js"/>
     <img src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white" alt="React"/>
     <img src="https://img.shields.io/badge/Express-4.21-000000?logo=express&logoColor=white" alt="Express"/>
-    <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white" alt="MySQL"/>
+    <img src="https://img.shields.io/badge/MariaDB-10.11-003545?logo=mariadb&logoColor=white" alt="MariaDB"/>
     <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white" alt="Docker"/>
     <img src="https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white" alt="Vite"/>
     <img src="https://img.shields.io/badge/Leaflet-1.9-199900?logo=leaflet&logoColor=white" alt="Leaflet"/>
@@ -47,7 +47,7 @@ Este proyecto resuelve un problema real: los agricultores no pueden estar revisa
 |------|-----------|
 | Frontend | React 18 + Vite + SCSS |
 | Backend | Node.js + Express 4 |
-| Base de Datos | MySQL 8 (Docker) |
+| Base de Datos | MariaDB 10.11 (Docker, perfil demo low-RAM) |
 | Mapas | Leaflet + OpenStreetMap |
 | Gráficos | Recharts |
 | Animaciones | Framer Motion |
@@ -174,7 +174,7 @@ Ambos canales son **opcionales**: si el usuario no tiene email o teléfono confi
 | Librería | Propósito |
 |----------|-----------|
 | Express 4 | Framework web REST |
-| mysql2 | Conexión a MySQL con pool |
+| mysql2 | Conexión a MariaDB/MySQL con pool |
 | jsonwebtoken | Autenticación JWT |
 | bcryptjs | Hashing de contraseñas |
 | nodemailer | Envío de correos (alertas + recuperación) |
@@ -224,13 +224,13 @@ Ambos canales son **opcionales**: si el usuario no tiene email o teléfono confi
 ### Instalación en 1 comando
 
 ```bash
-git clone https://github.com/tu-usuario/agrobot-alert.git
-cd agrobot-alert
-docker compose up -d
+git clone https://github.com/bentlyy/AgroBot-Alert.git
+cd AgroBot-Alert
+docker compose up -d --build
 ```
 
 Esto inicia 3 contenedores:
-- **MySQL 8** en `localhost:3306` (con schema y seed automático)
+- **MariaDB 10.11** en `localhost:3307` (con schema y seed automǭtico)
 - **Backend** en `http://localhost:3000`
 - **Frontend** en `http://localhost:5173`
 
@@ -296,7 +296,7 @@ curl http://localhost:3000/api/alertas
 ```
 agrobot-alert/
 ├── .dockerignore               # Archivos ignorados por Docker
-├── docker-compose.yml          # Orquestación MySQL + Backend + Frontend
+├── docker-compose.yml          # Orquestación MariaDB + Backend + Frontend (demo low-RAM)
 ├── AGENTS.md                   # Documentación técnica del desarrollador
 ├── database/
 │   ├── init.sql                # Schema + seed (ejecutado automáticamente)
@@ -315,7 +315,7 @@ agrobot-alert/
 │       └── utils/              # Utilidades:
 │           ├── authMiddleware.js# JWT + verificación de roles
 │           ├── rateLimiter.js  # Rate limiting global y por auth
-│           ├── dbConnection.js # Pool MySQL con retry exponencial
+│           ├── dbConnection.js # Pool MariaDB/MySQL con retry exponencial
 │           ├── wialonService.js# Adaptador Wialon (real/mock)
 │           ├── wialonMock.js   # Datos simulados para desarrollo
 │           ├── wialonApiUtils.js # API real de Wialon
@@ -392,7 +392,7 @@ INSERT alerta ──► enviarNotificacion()
 ### Sin Docker (para desarrollo rápido)
 
 ```bash
-# 1. Iniciar MySQL en Docker (solo la BD)
+# 1. Iniciar MariaDB en Docker (solo la BD)
 docker compose up -d mysql
 
 # 2. Backend
@@ -414,27 +414,28 @@ npm run dev
 docker compose down -v; docker compose up -d --build
 
 # Ver logs de un servicio específico
-docker logs agrobot-backend -f   # follow mode
-docker logs agrobot-frontend
-docker logs agrobot-mysql
+docker logs agrobot-demo-backend -f   # follow mode
+docker logs agrobot-demo-frontend
+docker logs agrobot-demo-mysql
 
 # Ejecutar seed manual
 $env:NODE_PATH="backend\node_modules"; node database/seed.js
 
-# Acceder a MySQL
-docker exec -it agrobot-mysql mysql -uroot -proot123 agro5
+# Acceder a MariaDB
+docker exec -it agrobot-demo-mysql mariadb -uroot -p agro5
 
 # Listar tablas
-docker exec agrobot-mysql mysql -uroot -proot123 -e "USE agro5; SHOW TABLES;"
+docker exec agrobot-demo-mysql mariadb -uroot -p -e "USE agro5; SHOW TABLES;"
 ```
 
 ### Variables de Entorno
 
 | Variable | Default | Descripción |
 |----------|---------|-------------|
-| `DB_HOST` | `localhost` | Host de MySQL |
-| `DB_USER` | `root` | Usuario MySQL |
-| `DB_PASSWORD` | `root123` | Contraseña MySQL |
+| `DB_HOST` | `127.0.0.1` | Host de MariaDB |
+| `DB_PORT` | `3307` | Puerto de MariaDB |
+| `DB_USER` | `agro` | Usuario MariaDB |
+| `DB_PASSWORD` | (definir) | Contrase��a MariaDB |
 | `DB_NAME` | `agro5` | Nombre de la base de datos |
 | `USE_MOCK_API` | `true` | Usar datos simulados (`true`) o API real de Wialon (`false`) |
 | `JWT_SECRET` | `your_secret_key` | Secreto para firmar y verificar tokens JWT |

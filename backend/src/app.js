@@ -1,7 +1,6 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 const express = require('express');
 const morgan = require('morgan');
-const session = require('express-session');
 const cors = require('cors');
 
 const authRoutes = require('./routes/authRoutes');
@@ -41,11 +40,6 @@ app.set('port', process.env.PORT || 3000);
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(session({
-  secret: process.env.JWT_SECRET || 'secret',
-  resave: true,
-  saveUninitialized: true
-}));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/auth', recuperacionRoutes);

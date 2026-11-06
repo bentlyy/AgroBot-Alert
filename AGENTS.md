@@ -2,19 +2,19 @@
 
 ## Stack
 
-- **Backend:** Node.js + Express + MySQL 8 (Docker) + Twilio + Nodemailer
+- **Backend:** Node.js + Express + MariaDB 10.11 (Docker) + Twilio + Nodemailer
 - **Frontend:** React 18 + Vite + Recharts + Leaflet + Framer Motion
-- **DB:** MySQL 8 corriendo en Docker compose
+- **DB:** MariaDB 10.11 en Docker compose (perfil demo low-RAM)
 
 ## Arranque rápido
 
 ```powershell
-docker compose up -d         # Inicia MySQL + Backend + Frontend
+docker compose up -d --build # Inicia MariaDB + Backend + Frontend (demo low-RAM)
 ```
 
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:3000
-- MySQL: localhost:3306 (root / root123)
+- MariaDB: localhost:3307 (credenciales en .env)
 
 ## Credenciales de prueba
 
@@ -100,18 +100,18 @@ AgroBot-Alert/
 docker compose down -v; docker compose up -d --build
 
 # Ver logs
-docker logs agrobot-backend
-docker logs agrobot-frontend
-docker logs agrobot-mysql
+docker logs agrobot-demo-backend
+docker logs agrobot-demo-frontend
+docker logs agrobot-demo-mysql
 
 # Ejecutar seed manual
 $env:NODE_PATH="backend\node_modules"; node database/seed.js
 
 # Entrar a MySQL
-docker exec -it agrobot-mysql mysql -uroot -proot123 agro5
+docker exec -it agrobot-demo-mysql mariadb -uroot -p agro5
 
 # Listar tablas
-docker exec agrobot-mysql mysql -uroot -proot123 -e "USE agro5; SHOW TABLES;"
+docker exec agrobot-demo-mysql mariadb -uroot -p -e "USE agro5; SHOW TABLES;"
 ```
 
 ## Notas

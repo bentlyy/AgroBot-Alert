@@ -1,12 +1,15 @@
 const mysql = require('mysql2');
 
 const pool = mysql.createPool({
-  connectionLimit: 10,
+  connectionLimit: Number(process.env.DB_CONNECTION_LIMIT) || 3,
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'agro5',
-  port: process.env.DB_PORT || 3306
+  port: Number(process.env.DB_PORT) || 3306,
+  charset: 'utf8mb4',
+  waitForConnections: true,
+  connectTimeout: 10000
 });
 
 let connected = false;
