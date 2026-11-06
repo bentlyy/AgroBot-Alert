@@ -1,35 +1,46 @@
+name: agrobot-demo
+
 services:
   mysql:
-    image: mysql:8.0
-    container_name: agrobot-mysql
+    image: mariadb:10.11
+    container_name: agrobot-demo-mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root123}
-      MYSQL_DATABASE: ${DB_NAME:-agro5}
-      MYSQL_USER: ${DB_USER:-agro}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-root123}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root123}
+      MARIADB_DATABASE: ${DB_NAME:-agro5}
+      MARIADB_USER: ${DB_USER:-agro}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-root123}
     ports:
-      - "127.0.0.1:3306:3306"
+      - "127.0.0.1:3307:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
-      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql
-    command: --default-authentication-plugin=mysql_native_password
+      - mysql_demo_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    command:
+      - --innodb-buffer-pool-size=64M
+      - --innodb-log-file-size=16M
+      - --innodb-buffer-pool-instances=1
+      - --innodb-flush-log-at-trx-commit=2
+      - --performance-schema=OFF
+      - --max-connections=20
+      - --table-open-cache=64
+      - --skip-name-resolve
+    mem_limit: 256m
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -p$$MARIADB_ROOT_PASSWORD --silent"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 20
       start_period: 30s
     logging:
       driver: json-file
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "5m"
+        max-file: "2"
 
   backend:
     build:
       context: ./backend
-    container_name: agrobot-backend
+    container_name: agrobot-demo-backend
     restart: unless-stopped
     ports:
       - "127.0.0.1:3000:3000"
@@ -37,42 +48,48 @@ services:
       DB_HOST: mysql
       DB_PORT: "3306"
       DB_USER: ${DB_USER:-agro}
-      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PASSWORD: ${DB_PASSWORD:-root123}
       DB_NAME: ${DB_NAME:-agro5}
+      DB_CONNECTION_LIMIT: "3"
       PORT: "3000"
       USE_MOCK_API: "true"
-      JWT_SECRET: ${JWT_SECRET}
-      FRONTEND_URL: https://agrobot.amgdeveloper.cl
-      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:-}
-      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:-}
-      TWILIO_WHATSAPP_FROM: ${TWILIO_WHATSAPP_FROM:-14155238886}
-      TWILIO_WHATSAPP_TO: ${TWILIO_WHATSAPP_TO:-}
-      EMAIL_USER: ${EMAIL_USER:-amgdevelpments@gmail.com}
-      EMAIL_PASS: "${EMAIL_PASS:-}"
-      ALERT_EMAIL_TO: ${ALERT_EMAIL_TO:-}
+      JWT_SECRET: ${JWT_SECRET:-demo-secret-change-me}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      NODE_OPTIONS: "--max-old-space-size=128"
+      API_TOKEN: ""
+      SENDGRID_API_KEY: ""
+      EMAIL_USER: ""
+      EMAIL_PASS: ""
+      ALERT_EMAIL_TO: ""
+      TWILIO_ACCOUNT_SID: ""
+      TWILIO_AUTH_TOKEN: ""
+      TWILIO_WHATSAPP_FROM: ""
+      TWILIO_WHATSAPP_TO: ""
     depends_on:
       mysql:
         condition: service_healthy
+    mem_limit: 160m
     logging:
       driver: json-file
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "5m"
+        max-file: "2"
 
   frontend:
     build:
       context: ./frontend
-    container_name: agrobot-frontend
+    container_name: agrobot-demo-frontend
     restart: unless-stopped
     ports:
       - "127.0.0.1:5173:80"
     depends_on:
       - backend
+    mem_limit: 48m
     logging:
       driver: json-file
       options:
-        max-size: "10m"
-        max-file: "3"
+        max-size: "5m"
+        max-file: "2"
 
 volumes:
-  mysql_data:
+  mysql_demo_data:
