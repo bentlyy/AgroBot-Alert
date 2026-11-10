@@ -8,8 +8,10 @@
     "start": "node src/app.js"
   },
   "dependencies": {
+    "@amg/auth-client": "file:vendor/amg-auth-client-0.1.0.tgz",
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

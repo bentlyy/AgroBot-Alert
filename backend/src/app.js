@@ -2,6 +2,8 @@ require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') }
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const { mountAgroBotSso } = require('./utils/amgSso');
 
 const authRoutes = require('./routes/authRoutes');
 const recuperacionRoutes = require('./routes/recuperacionContrasenaRoutes');
@@ -25,7 +27,9 @@ const { rateLimiter } = require('./utils/rateLimiter');
 
 const app = express();
 
-app.use(cors());
+app.set('trust proxy', 1);
+app.use(cors({ origin: process.env.FRONTEND_URL || true, credentials: true }));
+app.use(cookieParser());
 app.use(rateLimiter);
 
 app.use((req, res, next) => {
@@ -40,6 +44,10 @@ app.set('port', process.env.PORT || 3000);
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+mountAgroBotSso(app);
+
+app.get('/health', (req, res) => res.json({ ok: true, service: 'agrobot', sso: true }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/auth', recuperacionRoutes);

@@ -5,6 +5,9 @@ import Register from './Components/Register/Register';
 import Dashboard from './Components/Dashboard/Dashboard';
 import ProtectedRoute from './Components/ProtectedRoute/ProtectedRoute';
 import RecuperarContrasena from './Components/RecuperarContrasena/RecuperarContrasena';
+import axios from 'axios';
+
+axios.defaults.withCredentials = true;
 import './App.scss';
 
 const App = () => {
