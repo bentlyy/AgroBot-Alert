@@ -52,8 +52,11 @@ services:
       DB_NAME: ${DB_NAME:-agro5}
       DB_CONNECTION_LIMIT: "3"
       PORT: "3000"
+      APP_URL: ${APP_URL:-https://agrobot.amgdeveloper.cl}
+      CORE_URL: ${CORE_URL:-https://amgdeveloper.cl}
+      AMG_SSO_CLIENT_ID: ${AMG_SSO_CLIENT_ID:-agrobot}
+      AMG_SSO_CLIENT_SECRET: ${AMG_SSO_CLIENT_SECRET:?AMG_SSO_CLIENT_SECRET requerido}
       USE_MOCK_API: "true"
-      JWT_SECRET: ${JWT_SECRET:-demo-secret-change-me}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
       NODE_OPTIONS: "--max-old-space-size=128"
       API_TOKEN: ""

@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const UsuarioController = require('../controllers/usuariosController');
-const LoginController = require('../controllers/loginController');
-const { authRateLimiter } = require('../utils/rateLimiter');
 
-router.post('/register', authRateLimiter, UsuarioController.register);
-router.post('/login', authRateLimiter, LoginController.login);
+router.post('/register', (req, res) => {
+  res.status(410).json({ message: 'El registro local fue deshabilitado. Usa el acceso AMG.' });
+});
+
+router.post('/login', (req, res) => {
+  res.status(410).json({ message: 'El login local fue deshabilitado. Usa /api/auth/login con AMG SSO.' });
+});
 
 module.exports = router;

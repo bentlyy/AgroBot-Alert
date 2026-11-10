@@ -1,19 +1,15 @@
-const jwt = require('jsonwebtoken');
-
 function authMiddleware(req, res, next) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'Token no proporcionado' });
+  if (!req.amg) {
+    return res.status(401).json({ message: 'Sesion AMG no disponible' });
   }
-
-  const token = authHeader.split(' ')[1];
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_secret_key');
-    req.user = decoded;
-    next();
-  } catch (err) {
-    return res.status(401).json({ message: 'Token invalido o expirado' });
-  }
+  req.user = {
+    id: req.amg.userId,
+    nombre: req.amg.name || req.amg.email || 'Usuario AMG',
+    email: req.amg.email || '',
+    rol: req.amg.role === 'owner' || req.amg.role === 'admin' ? 'admin' : 'usuario',
+    organizationId: req.amg.organizationId,
+  };
+  next();
 }
 
 function adminOnly(req, res, next) {

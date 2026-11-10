@@ -5,7 +5,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY package*.json ./
-RUN npm ci --omit=dev --no-audit --no-fund
+COPY vendor ./vendor
+RUN npm install --omit=dev --no-audit --no-fund
 
 COPY . .
 

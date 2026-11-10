@@ -28,6 +28,9 @@ const Dashboard = () => {
   useEffect(() => {
     const stored = localStorage.getItem('user');
     if (stored) setUser(JSON.parse(stored));
+    axios.get('/api/auth/me', { withCredentials: true }).then((res) => {
+      if (res.data?.usuario) setUser(res.data.usuario);
+    }).catch(() => {});
   }, []);
 
   const isAdmin = user?.rol === 'admin';
@@ -49,7 +52,7 @@ const Dashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    navigate('/');
+    window.location.href = '/auth/logout';
   };
 
   const navItems = [
